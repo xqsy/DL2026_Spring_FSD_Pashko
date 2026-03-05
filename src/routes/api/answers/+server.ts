@@ -1,9 +1,8 @@
-import { json } from '@sveltejs/kit';
-import type { RequestHandler } from './$types';
+import { json, type RequestEvent } from '@sveltejs/kit';
 import { prisma } from '$lib/server/db';
 import { haversineDistance, calculatePoints } from '$lib/utils/haversine';
 
-export const POST: RequestHandler = async ({ request }) => {
+export async function POST({ request }: RequestEvent) {
   const body = await request.json();
   const { questionId, clickedLat, clickedLng, sessionId, usedHint = false } = body;
 

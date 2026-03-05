@@ -1,9 +1,8 @@
-import { json } from '@sveltejs/kit';
-import type { RequestHandler } from './$types';
+import { json, type RequestEvent } from '@sveltejs/kit';
 import { prisma } from '$lib/server/db';
 import { GameMode } from '../../../../generated/prisma/enums.ts';
 
-export const GET: RequestHandler = async ({ url }) => {
+export async function GET({ url }: RequestEvent) {
   const mode = url.searchParams.get('mode');
   const limit = parseInt(url.searchParams.get('limit') || '10');
 
@@ -24,7 +23,7 @@ export const GET: RequestHandler = async ({ url }) => {
   return json(entries);
 };
 
-export const POST: RequestHandler = async ({ request }) => {
+export async function POST({ request }: RequestEvent) {
   const body = await request.json();
   const { playerName, score, mode, category, sessionId } = body;
 

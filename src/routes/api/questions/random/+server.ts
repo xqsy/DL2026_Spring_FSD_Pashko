@@ -1,8 +1,7 @@
-import { json } from '@sveltejs/kit';
-import type { RequestHandler } from './$types';
+import { json, type RequestEvent } from '@sveltejs/kit';
 import { prisma } from '$lib/server/db';
 
-export const GET: RequestHandler = async ({ url }) => {
+export async function GET({ url }: RequestEvent) {
   const category = url.searchParams.get('category');
   const excludeIds = url.searchParams.get('exclude')?.split(',').filter(Boolean) || [];
 

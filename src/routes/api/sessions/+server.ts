@@ -1,9 +1,8 @@
-import { json } from '@sveltejs/kit';
-import type { RequestHandler } from './$types';
+import { json, type RequestEvent } from '@sveltejs/kit';
 import { prisma } from '$lib/server/db';
 import { GameMode, QuestionCategory } from '../../../../generated/prisma/enums.ts';
 
-export const POST: RequestHandler = async ({ request }) => {
+export async function POST({ request }: RequestEvent) {
   const body = await request.json();
   
   const mode = body.mode === 'ENDLESS' ? GameMode.ENDLESS : GameMode.FIXED_10;
@@ -20,7 +19,7 @@ export const POST: RequestHandler = async ({ request }) => {
   return json(session);
 };
 
-export const GET: RequestHandler = async ({ url }) => {
+export async function GET({ url }: RequestEvent) {
   const id = url.searchParams.get('id');
   
   if (!id) {
