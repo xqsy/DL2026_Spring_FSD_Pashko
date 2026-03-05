@@ -1,6 +1,8 @@
 import { json, type RequestEvent } from '@sveltejs/kit';
 import { prisma } from '$lib/server/db';
 import { haversineDistance, calculatePoints } from '$lib/utils/haversine';
+import { getDistanceToCountry } from '$lib/utils/countryBorders';
+import { QuestionCategory } from '../../../../generated/prisma/enums.js';
 
 export async function POST({ request }: RequestEvent) {
   const body = await request.json();
@@ -19,13 +21,29 @@ export async function POST({ request }: RequestEvent) {
     return json({ error: 'Question not found' }, { status: 404 });
   }
 
-  // Calculate distance and points
-  const distanceKm = haversineDistance(
-    clickedLat,
-    clickedLng,
-    question.correctLat,
-    question.correctLng
-  );
+  // Calculate distance based on category
+  let distanceKm: number;
+
+  if (question.category === QuestionCategory.COUNTRY) {
+    // Extract country name from question text (e.g., "Где находится Франция?" -> "Франция")
+    const countryName = extractCountryName(question.text);
+    distanceKm = getDistanceToCountry(
+      clickedLat,
+      clickedLng,
+      countryName,
+      question.correctLat,
+      question.correctLng
+    );
+  } else {
+    // For other categories, use center point distance
+    distanceKm = haversineDistance(
+      clickedLat,
+      clickedLng,
+      question.correctLat,
+      question.correctLng
+    );
+  }
+
   const points = calculatePoints(distanceKm, usedHint);
 
   // Save the answer
@@ -58,4 +76,17 @@ export async function POST({ request }: RequestEvent) {
     correctLng: question.correctLng,
     maxPoints: 1000,
   });
-};
+}
+
+/**
+ * Extract country name from question text
+ * e.g., "Где находится Франция?" -> "Франция"
+ */
+function extractCountryName(text: string): string {
+  // Remove common prefixes and suffixes
+  const cleaned = text
+    .replace(/^Где находится\s+/i, '')
+    .replace(/\?$/, '')
+    .trim();
+  return cleaned;
+}
