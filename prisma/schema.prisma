@@ -1,0 +1,80 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+enum GameMode {
+  FIXED_10
+  ENDLESS
+}
+
+enum QuestionCategory {
+  CAPITAL
+  LANDMARK
+  CITY
+  COUNTRY
+}
+
+model Question {
+  id         String            @id @default(cuid())
+  text       String
+  correctLat Float
+  correctLng Float
+  category   QuestionCategory
+  difficulty Int              @default(1)
+  hint       String?
+  createdAt  DateTime          @default(now())
+  answers    Answer[]
+
+  @@index([category])
+}
+
+model GameSession {
+  id                String      @id @default(cuid())
+  mode              GameMode
+  category          QuestionCategory?
+  score             Int         @default(0)
+  questionsTotal    Int         @default(10)
+  questionsAnswered Int         @default(0)
+  isCompleted       Boolean     @default(false)
+  createdAt         DateTime    @default(now())
+  completedAt       DateTime?
+  answers           Answer[]
+
+  @@index([isCompleted, score])
+}
+
+model Answer {
+  id         String      @id @default(cuid())
+  sessionId  String
+  session    GameSession @relation(fields: [sessionId], references: [id])
+  questionId String
+  question   Question    @relation(fields: [questionId], references: [id])
+  clickedLat Float
+  clickedLng Float
+  distanceKm Float
+  points     Int
+  usedHint   Boolean     @default(false)
+  createdAt  DateTime    @default(now())
+
+  @@index([sessionId])
+}
+
+model LeaderboardEntry {
+  id         String            @id @default(cuid())
+  playerName String
+  score      Int
+  mode       GameMode
+  category   QuestionCategory?
+  sessionId  String?           @unique
+  createdAt  DateTime          @default(now())
+
+  @@index([mode, score])
+}

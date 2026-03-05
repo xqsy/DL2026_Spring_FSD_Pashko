@@ -1,0 +1,1 @@
+Every time you make a change, make a commit with a clear message.
