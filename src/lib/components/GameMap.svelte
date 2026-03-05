@@ -169,9 +169,6 @@
 
 <div class="relative w-full h-full">
   <div bind:this={mapContainer} class="w-full h-full rounded-xl overflow-hidden shadow-lg"></div>
-  {#if disabled}
-    <div class="absolute inset-0 bg-transparent cursor-not-allowed"></div>
-  {/if}
 </div>
 
 <style>

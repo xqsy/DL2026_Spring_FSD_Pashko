@@ -170,7 +170,7 @@
     <div class="text-xl text-gray-600">Загрузка вопроса...</div>
   </div>
 {:else if gameState.currentQuestion}
-  <div class="container mx-auto px-4 py-6 max-w-6xl">
+  <div class="container mx-auto px-4 py-6 max-w-6xl pb-28">
     <!-- Header -->
     <div class="flex items-center justify-between mb-4">
       <div class="flex items-center gap-4">
@@ -250,13 +250,6 @@
           distanceKm={gameState.lastAnswer.distanceKm}
         />
       </div>
-
-      <button
-        onclick={nextQuestion}
-        class="w-full py-4 bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-bold rounded-xl hover:from-indigo-600 hover:to-purple-600 transition-all"
-      >
-        {isLastQuestion ? '🏁 Результаты' : '➡️ Следующий вопрос'}
-      </button>
     {:else}
       <button
         onclick={submitAnswer}
@@ -267,6 +260,19 @@
       </button>
     {/if}
   </div>
+
+  {#if showResult && gameState.lastAnswer}
+    <div class="fixed bottom-0 left-0 right-0 z-[1200] p-4 bg-gradient-to-t from-white via-white to-white/0">
+      <div class="container mx-auto max-w-6xl px-4">
+        <button
+          onclick={nextQuestion}
+          class="w-full py-4 bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-bold rounded-xl hover:from-indigo-600 hover:to-purple-600 transition-all shadow-lg"
+        >
+          {isLastQuestion ? '🏁 Результаты' : '➡️ Следующий вопрос'}
+        </button>
+      </div>
+    </div>
+  {/if}
 {/if}
 
 <!-- Exit Modal -->
