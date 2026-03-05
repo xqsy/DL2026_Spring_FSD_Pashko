@@ -29,15 +29,39 @@ export function getDistanceToCountry(
   const line = polygonToLine(countryBorder as any);
 
   // polygonToLine may return Feature or FeatureCollection depending on Polygon/MultiPolygon.
-  // pointToLineDistance expects a single feature/geometry, so we compute min distance.
-  const features: any[] =
-    line && line.type === 'FeatureCollection'
-      ? (line.features ?? [])
-      : [line];
+  // pointToLineDistance expects a single LineString feature/geometry, so we compute min distance
+  // across all produced line parts (LineString / MultiLineString).
+  const lineFeatures: any[] = [];
+
+  const pushLineFeature = (f: any) => {
+    if (!f) return;
+    const geom = f.type === 'Feature' ? f.geometry : f;
+    if (!geom) return;
+
+    if (geom.type === 'LineString') {
+      lineFeatures.push(f.type === 'Feature' ? f : { type: 'Feature', properties: {}, geometry: geom });
+      return;
+    }
+
+    if (geom.type === 'MultiLineString') {
+      for (const coords of geom.coordinates ?? []) {
+        lineFeatures.push({
+          type: 'Feature',
+          properties: {},
+          geometry: { type: 'LineString', coordinates: coords }
+        });
+      }
+    }
+  };
+
+  if (line && line.type === 'FeatureCollection') {
+    for (const f of line.features ?? []) pushLineFeature(f);
+  } else {
+    pushLineFeature(line);
+  }
 
   let min = Infinity;
-  for (const f of features) {
-    if (!f || (f.type === 'Feature' && !f.geometry)) continue;
+  for (const f of lineFeatures) {
     const d = pointToLineDistance(pt, f as any, { units: 'kilometers' });
     if (typeof d === 'number' && Number.isFinite(d)) min = Math.min(min, d);
   }
