@@ -37,6 +37,16 @@
     const url = `/api/questions/random?${gameState.category ? `category=${gameState.category}&` : ''}exclude=${excludeIds}`;
 
     const res = await fetch(url);
+    if (!res.ok) {
+      // No more questions available (e.g. excluded all in this category)
+      if (res.status === 404) {
+        game.finish();
+        goto('/results');
+        return;
+      }
+
+      throw new Error(`Failed to load question: ${res.status}`);
+    }
     const question = await res.json();
 
     game.setQuestion(question);
