@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
   import Leaderboard from '$lib/components/Leaderboard.svelte';
 
@@ -15,18 +14,24 @@
   let entries = $state<Entry[]>([]);
   let isLoading = $state(true);
   let selectedMode = $state<string>('');
+  let errorMessage = $state<string | null>(null);
 
   async function loadLeaderboard() {
     isLoading = true;
+    errorMessage = null;
     const url = `/api/leaderboard?${selectedMode ? `mode=${selectedMode}&` : ''}limit=20`;
-    const res = await fetch(url);
-    entries = await res.json();
-    isLoading = false;
+    try {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(`Failed to load leaderboard: ${res.status}`);
+      entries = await res.json();
+    } catch (e) {
+      console.error(e);
+      entries = [];
+      errorMessage = 'Не удалось загрузить таблицу лидеров';
+    } finally {
+      isLoading = false;
+    }
   }
-
-  onMount(() => {
-    loadLeaderboard();
-  });
 
   $effect(() => {
     loadLeaderboard();
@@ -77,6 +82,10 @@
   {#if isLoading}
     <div class="text-center py-12 text-gray-500">
       Загрузка...
+    </div>
+  {:else if errorMessage}
+    <div class="text-center py-12 text-gray-500">
+      {errorMessage}
     </div>
   {:else}
     <Leaderboard entries={entries} />
