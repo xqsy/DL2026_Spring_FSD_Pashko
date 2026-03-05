@@ -29,6 +29,7 @@
 	"dependencies": {
 		"@prisma/adapter-libsql": "^7.4.2",
 		"@prisma/client": "^7.4.2",
+		"@tailwindcss/postcss": "^4.2.1",
 		"leaflet": "^1.9.4",
 		"prisma": "^7.4.2"
 	}
