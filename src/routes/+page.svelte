@@ -63,7 +63,7 @@
     
     <!-- Mode Selection -->
     <div class="mb-6">
-      <label class="block text-sm font-medium text-gray-700 mb-2">Режим игры</label>
+      <div class="block text-sm font-medium text-gray-700 mb-2">Режим игры</div>
       <div class="grid grid-cols-2 gap-3">
         <button
           class="p-4 rounded-xl border-2 transition-all {selectedMode === 'FIXED_10' ? 'border-indigo-500 bg-indigo-50 text-indigo-700' : 'border-gray-200 hover:border-gray-300'}"
@@ -84,8 +84,9 @@
 
     <!-- Category Selection -->
     <div class="mb-6">
-      <label class="block text-sm font-medium text-gray-700 mb-2">Категория</label>
+      <label for="game-category" class="block text-sm font-medium text-gray-700 mb-2">Категория</label>
       <select
+        id="game-category"
         bind:value={selectedCategory}
         class="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
       >

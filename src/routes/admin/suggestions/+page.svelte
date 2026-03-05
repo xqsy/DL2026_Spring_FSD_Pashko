@@ -3,6 +3,7 @@
   import GameMap from '$lib/components/GameMap.svelte';
 
   type SuggestionStatus = 'PENDING' | 'APPROVED' | 'REJECTED';
+  type QuestionCategory = 'CAPITAL' | 'LANDMARK' | 'CITY' | 'COUNTRY';
 
   type Suggestion = {
     id: string;
@@ -25,6 +26,7 @@
   let errorMessage = $state<string | null>(null);
   let adminNote = $state('');
   let isActing = $state(false);
+  let approveCategory = $state<QuestionCategory>('CITY');
 
   const selected = $derived(suggestions.find((s) => s.id === selectedId) ?? null);
 
@@ -59,6 +61,13 @@
     adminNote = selected?.adminNote ?? '';
   });
 
+  $effect(() => {
+    if (selected?.status !== 'PENDING') return;
+    if (selected?.city) approveCategory = 'CITY';
+    else if (selected?.country) approveCategory = 'COUNTRY';
+    else approveCategory = 'CITY';
+  });
+
   async function act(action: 'APPROVE' | 'REJECT') {
     if (!selected || isActing) return;
     isActing = true;
@@ -71,6 +80,7 @@
           id: selected.id,
           action,
           adminNote: adminNote.trim() || null,
+          category: action === 'APPROVE' ? approveCategory : undefined,
         }),
       });
 
@@ -104,6 +114,12 @@
   <div class="flex items-center justify-between mb-6">
     <h1 class="text-3xl font-bold text-gray-800">🛠️ Предложения вопросов</h1>
     <div class="flex gap-2">
+      <button
+        onclick={() => goto('/admin/questions')}
+        class="px-4 py-2 bg-indigo-100 text-indigo-700 rounded-lg hover:bg-indigo-200 transition-colors"
+      >
+        🧩 Вопросы
+      </button>
       <button
         onclick={() => goto('/')}
         class="px-4 py-2 bg-indigo-100 text-indigo-700 rounded-lg hover:bg-indigo-200 transition-colors"
@@ -206,12 +222,28 @@
             </div>
 
             <div class="mt-4">
-              <label class="block text-sm font-medium text-gray-700 mb-2">Admin note</label>
+              <label for="admin-note" class="block text-sm font-medium text-gray-700 mb-2">Admin note</label>
               <textarea
+                id="admin-note"
                 bind:value={adminNote}
                 rows={3}
                 class="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
               ></textarea>
+            </div>
+
+            <div class="mt-4">
+              <label for="approve-category" class="block text-sm font-medium text-gray-700 mb-2">Категория при добавлении</label>
+              <select
+                id="approve-category"
+                bind:value={approveCategory}
+                disabled={selected.status !== 'PENDING'}
+                class="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent disabled:opacity-50"
+              >
+                <option value="CAPITAL">Столица</option>
+                <option value="LANDMARK">Достопримечательность</option>
+                <option value="CITY">Город</option>
+                <option value="COUNTRY">Страна</option>
+              </select>
             </div>
 
             <div class="mt-4 flex flex-col sm:flex-row gap-3">

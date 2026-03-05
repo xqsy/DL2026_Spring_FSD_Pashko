@@ -26,7 +26,7 @@ export async function PATCH(event: RequestEvent) {
   requireAdmin(event);
 
   const body = await event.request.json();
-  const { id, action, adminNote } = body ?? {};
+  const { id, action, adminNote, category } = body ?? {};
 
   if (!id || typeof id !== 'string') {
     return json({ error: 'id is required' }, { status: 400 });
@@ -59,18 +59,21 @@ export async function PATCH(event: RequestEvent) {
   }
 
   // APPROVE
-  const inferredCategory = suggestion.city
-    ? QuestionCategory.CITY
-    : suggestion.country
-      ? QuestionCategory.COUNTRY
-      : QuestionCategory.CITY;
+  if (!category || typeof category !== 'string') {
+    return json({ error: 'category is required for approve' }, { status: 400 });
+  }
+
+  const allowedCategories = ['CAPITAL', 'LANDMARK', 'CITY', 'COUNTRY'] as const;
+  if (!allowedCategories.includes(category as (typeof allowedCategories)[number])) {
+    return json({ error: 'Invalid category' }, { status: 400 });
+  }
 
   const q = await prisma.question.create({
     data: {
       text: suggestion.questionText,
       correctLat: suggestion.lat,
       correctLng: suggestion.lng,
-      category: inferredCategory,
+      category: category as QuestionCategory,
       difficulty: 1,
       hint: null,
     },

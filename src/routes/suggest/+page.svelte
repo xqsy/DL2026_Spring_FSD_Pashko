@@ -100,8 +100,9 @@
   {:else}
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
       <div class="bg-white rounded-2xl shadow-xl p-6">
-        <label class="block text-sm font-medium text-gray-700 mb-2">Текст вопроса</label>
+        <label for="suggest-question-text" class="block text-sm font-medium text-gray-700 mb-2">Текст вопроса</label>
         <textarea
+          id="suggest-question-text"
           bind:value={questionText}
           rows={4}
           class="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
@@ -110,16 +111,18 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Страна (опционально)</label>
+            <label for="suggest-country" class="block text-sm font-medium text-gray-700 mb-2">Страна (опционально)</label>
             <input
+              id="suggest-country"
               bind:value={country}
               class="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
               placeholder="Латвия"
             />
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Город (опционально)</label>
+            <label for="suggest-city" class="block text-sm font-medium text-gray-700 mb-2">Город (опционально)</label>
             <input
+              id="suggest-city"
               bind:value={city}
               class="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
               placeholder="Рига"
