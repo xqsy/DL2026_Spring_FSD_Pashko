@@ -27,8 +27,25 @@ export function getDistanceToCountry(
   }
 
   const line = polygonToLine(countryBorder as any);
-  const dist = pointToLineDistance(pt, line as any, { units: 'kilometers' });
-  return dist;
+
+  // polygonToLine may return Feature or FeatureCollection depending on Polygon/MultiPolygon.
+  // pointToLineDistance expects a single feature/geometry, so we compute min distance.
+  const features: any[] =
+    line && line.type === 'FeatureCollection'
+      ? (line.features ?? [])
+      : [line];
+
+  let min = Infinity;
+  for (const f of features) {
+    if (!f || (f.type === 'Feature' && !f.geometry)) continue;
+    const d = pointToLineDistance(pt, f as any, { units: 'kilometers' });
+    if (typeof d === 'number' && Number.isFinite(d)) min = Math.min(min, d);
+  }
+
+  if (min !== Infinity) return min;
+
+  // Fallback in case geometry is malformed
+  return haversineDistance(clickedLat, clickedLng, centerLat, centerLng);
 }
 
 /**
