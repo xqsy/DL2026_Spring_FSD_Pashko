@@ -44,8 +44,11 @@ export async function getCountryBorderFeatureByName(countryName: string): Promis
   const fc = await loadCountriesDataset();
   const feature = (fc.features as GeoJSON.Feature[]).find((f) => {
     const props: any = f.properties ?? {};
-    const iso = props.ISO_A3 ?? props.iso_a3 ?? props.ADM0_A3;
-    return typeof iso === 'string' && iso.toUpperCase() === cca3;
+    const iso = props['ISO3166-1-Alpha-3'] ?? props.ISO_A3 ?? props.iso_a3 ?? props.ADM0_A3;
+    if (typeof iso === 'string' && iso.toUpperCase() === cca3) return true;
+
+    const name = props.name;
+    return typeof name === 'string' && name.trim().toLowerCase() === countryName.trim().toLowerCase();
   });
 
   if (!feature) return null;
