@@ -222,7 +222,7 @@
 
 <!-- Exit Modal -->
 {#if showExitModal}
-  <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 px-4">
+  <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-[2000] px-4">
     <div class="bg-white rounded-2xl shadow-xl p-6 w-full max-w-sm text-center">
       <div class="text-4xl mb-3">⚠️</div>
       <h2 class="text-xl font-bold text-gray-800 mb-2">Выйти из игры?</h2>
