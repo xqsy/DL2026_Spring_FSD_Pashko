@@ -175,16 +175,18 @@
     </div>
 
     <!-- Progress -->
-    <div class="mb-4">
-      <ProgressBar current={gameState.questionNumber} total={gameState.totalQuestions} />
-    </div>
+    {#if gameState.mode === 'FIXED_10'}
+      <div class="mb-4">
+        <ProgressBar current={gameState.questionNumber} total={gameState.totalQuestions} />
+      </div>
+    {/if}
 
     <!-- Question -->
     <QuestionCard
       text={gameState.currentQuestion.text}
       category={gameState.currentQuestion.category}
-      questionNumber={gameState.questionNumber}
-      totalQuestions={gameState.totalQuestions}
+      questionNumber={gameState.mode === 'FIXED_10' ? gameState.questionNumber : undefined}
+      totalQuestions={gameState.mode === 'FIXED_10' ? gameState.totalQuestions : undefined}
     />
 
     <!-- Hint Button -->

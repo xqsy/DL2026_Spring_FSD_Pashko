@@ -40,6 +40,11 @@
     goto('/');
   }
 
+  function exitToMenu() {
+    game.reset();
+    goto('/');
+  }
+
   function viewLeaderboard() {
     goto('/leaderboard');
   }
@@ -71,7 +76,11 @@
       <div class="text-5xl font-bold mb-2">{gameState.score}</div>
       <div class="text-indigo-100">очков</div>
       <div class="mt-4 text-sm text-indigo-200">
-        {gameState.questionNumber} вопросов • {gameState.mode === 'FIXED_10' ? 'Режим: 10 вопросов' : 'Режим: Бесконечный'}
+        {#if gameState.mode === 'FIXED_10'}
+          {gameState.questionNumber} вопросов • Режим: 10 вопросов
+        {:else}
+          Режим: Бесконечный
+        {/if}
       </div>
     </div>
 
@@ -100,6 +109,12 @@
           {isSubmitting ? 'Сохранение...' : 'Сохранить результат'}
         </button>
         <button
+          onclick={exitToMenu}
+          class="w-full py-3 bg-gray-100 text-gray-700 font-bold rounded-xl hover:bg-gray-200 transition-all"
+        >
+          Выйти в меню
+        </button>
+        <button
           onclick={playAgain}
           class="w-full py-3 bg-gray-100 text-gray-700 font-bold rounded-xl hover:bg-gray-200 transition-all"
         >
@@ -116,6 +131,12 @@
           class="w-full py-3 bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-bold rounded-xl hover:from-indigo-600 hover:to-purple-600 transition-all"
         >
           🏆 Таблица лидеров
+        </button>
+        <button
+          onclick={exitToMenu}
+          class="w-full py-3 bg-gray-100 text-gray-700 font-bold rounded-xl hover:bg-gray-200 transition-all"
+        >
+          Выйти в меню
         </button>
         <button
           onclick={playAgain}
