@@ -113,5 +113,11 @@
     >
       🏆 Таблица лидеров
     </a>
+    <a
+      href="/suggest"
+      class="px-6 py-3 bg-white rounded-xl shadow hover:shadow-md transition-all text-gray-700"
+    >
+      ✍️ Предложить вопрос
+    </a>
   </div>
 </div>

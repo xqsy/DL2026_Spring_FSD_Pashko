@@ -22,6 +22,12 @@ enum QuestionCategory {
   COUNTRY
 }
 
+enum SuggestionStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
 model Question {
   id         String            @id @default(cuid())
   text       String
@@ -77,4 +83,24 @@ model LeaderboardEntry {
   createdAt  DateTime          @default(now())
 
   @@index([mode, score])
+}
+
+model QuestionSuggestion {
+  id            String           @id @default(cuid())
+  questionText  String
+  lat           Float
+  lng           Float
+  country       String?
+  city          String?
+  status        SuggestionStatus @default(PENDING)
+  adminNote     String?
+  createdAt     DateTime         @default(now())
+  reviewedAt    DateTime?
+  approvedAt    DateTime?
+  rejectedAt    DateTime?
+  approvedBy    String?
+  rejectedBy    String?
+  createdQuestionId String?
+
+  @@index([status, createdAt])
 }

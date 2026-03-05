@@ -37,3 +37,8 @@ export type Answer = Prisma.AnswerModel
  * 
  */
 export type LeaderboardEntry = Prisma.LeaderboardEntryModel
+/**
+ * Model QuestionSuggestion
+ * 
+ */
+export type QuestionSuggestion = Prisma.QuestionSuggestionModel

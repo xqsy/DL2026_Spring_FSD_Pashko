@@ -387,7 +387,8 @@ export const ModelName = {
   Question: 'Question',
   GameSession: 'GameSession',
   Answer: 'Answer',
-  LeaderboardEntry: 'LeaderboardEntry'
+  LeaderboardEntry: 'LeaderboardEntry',
+  QuestionSuggestion: 'QuestionSuggestion'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -403,7 +404,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "question" | "gameSession" | "answer" | "leaderboardEntry"
+    modelProps: "question" | "gameSession" | "answer" | "leaderboardEntry" | "questionSuggestion"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -703,6 +704,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    QuestionSuggestion: {
+      payload: Prisma.$QuestionSuggestionPayload<ExtArgs>
+      fields: Prisma.QuestionSuggestionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.QuestionSuggestionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuestionSuggestionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.QuestionSuggestionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuestionSuggestionPayload>
+        }
+        findFirst: {
+          args: Prisma.QuestionSuggestionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuestionSuggestionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.QuestionSuggestionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuestionSuggestionPayload>
+        }
+        findMany: {
+          args: Prisma.QuestionSuggestionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuestionSuggestionPayload>[]
+        }
+        create: {
+          args: Prisma.QuestionSuggestionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuestionSuggestionPayload>
+        }
+        createMany: {
+          args: Prisma.QuestionSuggestionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.QuestionSuggestionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuestionSuggestionPayload>[]
+        }
+        delete: {
+          args: Prisma.QuestionSuggestionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuestionSuggestionPayload>
+        }
+        update: {
+          args: Prisma.QuestionSuggestionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuestionSuggestionPayload>
+        }
+        deleteMany: {
+          args: Prisma.QuestionSuggestionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.QuestionSuggestionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.QuestionSuggestionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuestionSuggestionPayload>[]
+        }
+        upsert: {
+          args: Prisma.QuestionSuggestionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$QuestionSuggestionPayload>
+        }
+        aggregate: {
+          args: Prisma.QuestionSuggestionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateQuestionSuggestion>
+        }
+        groupBy: {
+          args: Prisma.QuestionSuggestionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.QuestionSuggestionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.QuestionSuggestionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.QuestionSuggestionCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -796,6 +871,27 @@ export const LeaderboardEntryScalarFieldEnum = {
 export type LeaderboardEntryScalarFieldEnum = (typeof LeaderboardEntryScalarFieldEnum)[keyof typeof LeaderboardEntryScalarFieldEnum]
 
 
+export const QuestionSuggestionScalarFieldEnum = {
+  id: 'id',
+  questionText: 'questionText',
+  lat: 'lat',
+  lng: 'lng',
+  country: 'country',
+  city: 'city',
+  status: 'status',
+  adminNote: 'adminNote',
+  createdAt: 'createdAt',
+  reviewedAt: 'reviewedAt',
+  approvedAt: 'approvedAt',
+  rejectedAt: 'rejectedAt',
+  approvedBy: 'approvedBy',
+  rejectedBy: 'rejectedBy',
+  createdQuestionId: 'createdQuestionId'
+} as const
+
+export type QuestionSuggestionScalarFieldEnum = (typeof QuestionSuggestionScalarFieldEnum)[keyof typeof QuestionSuggestionScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -864,6 +960,13 @@ export type EnumGameModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaM
  * Reference to a field of type 'Boolean'
  */
 export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+/**
+ * Reference to a field of type 'SuggestionStatus'
+ */
+export type EnumSuggestionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SuggestionStatus'>
     
 
 /**
@@ -965,6 +1068,7 @@ export type GlobalOmitConfig = {
   gameSession?: Prisma.GameSessionOmit
   answer?: Prisma.AnswerOmit
   leaderboardEntry?: Prisma.LeaderboardEntryOmit
+  questionSuggestion?: Prisma.QuestionSuggestionOmit
 }
 
 /* Types for Logging */

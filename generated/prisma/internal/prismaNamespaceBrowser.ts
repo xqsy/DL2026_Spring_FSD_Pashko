@@ -54,7 +54,8 @@ export const ModelName = {
   Question: 'Question',
   GameSession: 'GameSession',
   Answer: 'Answer',
-  LeaderboardEntry: 'LeaderboardEntry'
+  LeaderboardEntry: 'LeaderboardEntry',
+  QuestionSuggestion: 'QuestionSuggestion'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -125,6 +126,27 @@ export const LeaderboardEntryScalarFieldEnum = {
 } as const
 
 export type LeaderboardEntryScalarFieldEnum = (typeof LeaderboardEntryScalarFieldEnum)[keyof typeof LeaderboardEntryScalarFieldEnum]
+
+
+export const QuestionSuggestionScalarFieldEnum = {
+  id: 'id',
+  questionText: 'questionText',
+  lat: 'lat',
+  lng: 'lng',
+  country: 'country',
+  city: 'city',
+  status: 'status',
+  adminNote: 'adminNote',
+  createdAt: 'createdAt',
+  reviewedAt: 'reviewedAt',
+  approvedAt: 'approvedAt',
+  rejectedAt: 'rejectedAt',
+  approvedBy: 'approvedBy',
+  rejectedBy: 'rejectedBy',
+  createdQuestionId: 'createdQuestionId'
+} as const
+
+export type QuestionSuggestionScalarFieldEnum = (typeof QuestionSuggestionScalarFieldEnum)[keyof typeof QuestionSuggestionScalarFieldEnum]
 
 
 export const SortOrder = {
