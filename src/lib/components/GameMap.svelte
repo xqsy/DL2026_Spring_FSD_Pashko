@@ -52,19 +52,24 @@
   $effect(() => {
     if (!map || !L) return;
 
+    // Track dependencies explicitly
+    const cm = clickedMarker;
+    const com = correctMarker;
+    const sl = showLine;
+
     // Update clicked marker
     if (clickedMarkerLayer) {
       map.removeLayer(clickedMarkerLayer);
       clickedMarkerLayer = null;
     }
-    if (clickedMarker) {
+    if (cm) {
       const blueIcon = L.divIcon({
         className: 'custom-marker clicked',
         html: '<div class="w-6 h-6 bg-blue-500 rounded-full border-2 border-white shadow-lg flex items-center justify-center"><div class="w-2 h-2 bg-white rounded-full"></div></div>',
         iconSize: [24, 24],
         iconAnchor: [12, 12],
       });
-      clickedMarkerLayer = L.marker([clickedMarker.lat, clickedMarker.lng], { icon: blueIcon }).addTo(map);
+      clickedMarkerLayer = L.marker([cm.lat, cm.lng], { icon: blueIcon }).addTo(map);
     }
 
     // Update correct marker
@@ -72,14 +77,14 @@
       map.removeLayer(correctMarkerLayer);
       correctMarkerLayer = null;
     }
-    if (correctMarker) {
+    if (com) {
       const greenIcon = L.divIcon({
         className: 'custom-marker correct',
         html: '<div class="w-8 h-8 bg-green-500 rounded-full border-2 border-white shadow-lg flex items-center justify-center"><span class="text-white text-sm">✓</span></div>',
         iconSize: [32, 32],
         iconAnchor: [16, 16],
       });
-      correctMarkerLayer = L.marker([correctMarker.lat, correctMarker.lng], { icon: greenIcon }).addTo(map);
+      correctMarkerLayer = L.marker([com.lat, com.lng], { icon: greenIcon }).addTo(map);
     }
 
     // Update line
@@ -87,11 +92,11 @@
       map.removeLayer(lineLayer);
       lineLayer = null;
     }
-    if (showLine && clickedMarker && correctMarker) {
+    if (sl && cm && com) {
       lineLayer = L.polyline(
         [
-          [clickedMarker.lat, clickedMarker.lng],
-          [correctMarker.lat, correctMarker.lng],
+          [cm.lat, cm.lng],
+          [com.lat, com.lng],
         ],
         { color: '#ef4444', weight: 3, dashArray: '10, 10' }
       ).addTo(map);
