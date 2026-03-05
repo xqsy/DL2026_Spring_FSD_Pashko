@@ -11,6 +11,7 @@
   let showResult = $state(false);
   let isLoading = $state(true);
   let isSubmitting = $state(false);
+  let showExitModal = $state(false);
 
   // Subscribe to game store
   let gameState = $state(getGame());
@@ -92,6 +93,27 @@
   };
 
   const isLastQuestion = gameState.questionNumber >= gameState.totalQuestions;
+
+  function handleExit() {
+    // Show modal only if player has score or answered questions
+    if (gameState.score > 0 || gameState.questionNumber > 0) {
+      showExitModal = true;
+    } else {
+      game.reset();
+      goto('/');
+    }
+  }
+
+  function confirmExit(saveScore: boolean) {
+    showExitModal = false;
+    if (saveScore) {
+      game.finish();
+      goto('/results');
+    } else {
+      game.reset();
+      goto('/');
+    }
+  }
 </script>
 
 <svelte:head>
@@ -107,15 +129,15 @@
     <!-- Header -->
     <div class="flex items-center justify-between mb-4">
       <div class="flex items-center gap-4">
-        <a
-          href="/"
+        <button
+          onclick={handleExit}
           class="flex items-center gap-2 px-3 py-2 bg-white rounded-lg shadow hover:bg-gray-50 transition-colors text-gray-600 hover:text-gray-800"
         >
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
             <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
           </svg>
           <span class="text-sm font-medium">Выход</span>
-        </a>
+        </button>
         <span class="text-2xl font-bold text-indigo-600">🌍 GeoHoot</span>
       </div>
       <div class="flex items-center gap-4">
@@ -195,5 +217,38 @@
         {isSubmitting ? 'Проверка...' : '✓ Ответить'}
       </button>
     {/if}
+  </div>
+{/if}
+
+<!-- Exit Modal -->
+{#if showExitModal}
+  <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 px-4">
+    <div class="bg-white rounded-2xl shadow-xl p-6 w-full max-w-sm text-center">
+      <div class="text-4xl mb-3">⚠️</div>
+      <h2 class="text-xl font-bold text-gray-800 mb-2">Выйти из игры?</h2>
+      <p class="text-gray-600 mb-4">
+        У вас {gameState.score} очков. Сохранить результат в таблице лидеров?
+      </p>
+      <div class="flex flex-col gap-3">
+        <button
+          onclick={() => confirmExit(true)}
+          class="w-full py-3 bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-bold rounded-xl hover:from-indigo-600 hover:to-purple-600 transition-all"
+        >
+          🏆 Сохранить результат
+        </button>
+        <button
+          onclick={() => confirmExit(false)}
+          class="w-full py-3 bg-gray-100 text-gray-700 font-bold rounded-xl hover:bg-gray-200 transition-all"
+        >
+          Выйти без сохранения
+        </button>
+        <button
+          onclick={() => showExitModal = false}
+          class="w-full py-2 text-gray-500 hover:text-gray-700 transition-colors"
+        >
+          Продолжить игру
+        </button>
+      </div>
+    </div>
   </div>
 {/if}
