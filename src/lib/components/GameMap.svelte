@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount, onDestroy } from 'svelte';
   import { browser } from '$app/environment';
+  import { countriesGeoJSON } from '$lib/utils/countryGeoJSON';
 
   interface Props {
     onMapClick?: (lat: number, lng: number) => void;
@@ -8,6 +9,7 @@
     clickedMarker?: { lat: number; lng: number } | null;
     showLine?: boolean;
     disabled?: boolean;
+    countryName?: string | null;
   }
 
   let {
@@ -15,7 +17,8 @@
     correctMarker = null,
     clickedMarker = null,
     showLine = false,
-    disabled = false
+    disabled = false,
+    countryName = null
   }: Props = $props();
 
   let mapContainer: HTMLDivElement;
@@ -23,6 +26,7 @@
   let clickedMarkerLayer: L.Marker | null = null;
   let correctMarkerLayer: L.Marker | null = null;
   let lineLayer: L.Polyline | null = null;
+  let borderLayer: L.GeoJSON | null = null;
 
   let L: typeof import('leaflet');
 
@@ -56,6 +60,7 @@
     const cm = clickedMarker;
     const com = correctMarker;
     const sl = showLine;
+    const cn = countryName;
 
     // Update clicked marker
     if (clickedMarkerLayer) {
@@ -65,7 +70,7 @@
     if (cm) {
       const blueIcon = L.divIcon({
         className: 'custom-marker clicked',
-        html: '<div class="w-6 h-6 bg-blue-500 rounded-full border-2 border-white shadow-lg flex items-center justify-center"><div class="w-2 h-2 bg-white rounded-full"></div></div>',
+        html: '<div style="width:24px;height:24px;background:#3b82f6;border-radius:50%;border:2px solid white;box-shadow:0 4px 6px rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;"><div style="width:8px;height:8px;background:white;border-radius:50%;"></div></div>',
         iconSize: [24, 24],
         iconAnchor: [12, 12],
       });
@@ -80,7 +85,7 @@
     if (com) {
       const greenIcon = L.divIcon({
         className: 'custom-marker correct',
-        html: '<div class="w-8 h-8 bg-green-500 rounded-full border-2 border-white shadow-lg flex items-center justify-center"><span class="text-white text-sm">✓</span></div>',
+        html: '<div style="width:32px;height:32px;background:#22c55e;border-radius:50%;border:2px solid white;box-shadow:0 4px 6px rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;"><span style="color:white;font-size:14px;">&#10003;</span></div>',
         iconSize: [32, 32],
         iconAnchor: [16, 16],
       });
@@ -100,6 +105,22 @@
         ],
         { color: '#ef4444', weight: 3, dashArray: '10, 10' }
       ).addTo(map);
+    }
+
+    // Update country border
+    if (borderLayer) {
+      map.removeLayer(borderLayer);
+      borderLayer = null;
+    }
+    if (cn && countriesGeoJSON[cn]) {
+      borderLayer = L.geoJSON(countriesGeoJSON[cn], {
+        style: {
+          color: '#f59e0b',
+          weight: 2,
+          fillColor: '#fbbf24',
+          fillOpacity: 0.3
+        }
+      }).addTo(map);
     }
   });
 

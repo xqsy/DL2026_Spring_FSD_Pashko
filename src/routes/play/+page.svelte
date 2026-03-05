@@ -92,6 +92,12 @@
     }
   };
 
+  // Extract country name from question text (e.g., "Где находится Франция?" -> "Франция")
+  function extractCountryName(text: string): string | null {
+    const match = text.match(/Где находится ([^?]+)\?/);
+    return match ? match[1] : null;
+  }
+
   const isLastQuestion = gameState.questionNumber >= gameState.totalQuestions;
 
   function handleExit() {
@@ -183,6 +189,7 @@
         correctMarker={showResult && gameState.lastAnswer ? { lat: gameState.lastAnswer.correctLat, lng: gameState.lastAnswer.correctLng } : null}
         showLine={showResult}
         disabled={showResult}
+        countryName={gameState.currentQuestion?.category === 'COUNTRY' ? extractCountryName(gameState.currentQuestion.text) : null}
       />
       
       <!-- Click indicator -->

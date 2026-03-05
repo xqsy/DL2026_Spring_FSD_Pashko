@@ -30,6 +30,8 @@
 		"@prisma/adapter-libsql": "^7.4.2",
 		"@prisma/client": "^7.4.2",
 		"@tailwindcss/postcss": "^4.2.1",
+		"@turf/boolean-point-in-polygon": "^7.3.4",
+		"@turf/helpers": "^7.3.4",
 		"leaflet": "^1.9.4",
 		"prisma": "^7.4.2"
 	}
