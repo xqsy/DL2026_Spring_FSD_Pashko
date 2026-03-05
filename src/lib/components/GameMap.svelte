@@ -9,6 +9,7 @@
     showLine?: boolean;
     disabled?: boolean;
     countryBorder?: GeoJSON.Feature | null;
+    hideLabels?: boolean;
   }
 
   let {
@@ -17,11 +18,13 @@
     clickedMarker = null,
     showLine = false,
     disabled = false,
-    countryBorder = null
+    countryBorder = null,
+    hideLabels = false
   }: Props = $props();
 
   let mapContainer: HTMLDivElement;
   let map: L.Map | null = null;
+  let tileLayer: L.TileLayer | null = null;
   let clickedMarkerLayer: L.CircleMarker | null = null;
   let correctMarkerLayer: L.CircleMarker | null = null;
   let lineLayer: L.Polyline | null = null;
@@ -44,9 +47,7 @@
       worldCopyJump: true,
     });
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap contributors',
-    }).addTo(map);
+    // Tile layer is managed reactively in $effect (to support hideLabels changes)
 
     map.on('click', (e: L.LeafletMouseEvent) => {
       if (disabled || !onMapClick) return;
@@ -65,6 +66,24 @@
     const sl = showLine;
     const cb = countryBorder;
     const dis = disabled;
+    const hl = hideLabels;
+
+    // Update tile layer (switch to no-labels tiles for country guessing)
+    if (tileLayer) {
+      map.removeLayer(tileLayer);
+      tileLayer = null;
+    }
+    if (hl) {
+      tileLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
+        subdomains: 'abcd',
+        maxZoom: 20,
+      }).addTo(map);
+    } else {
+      tileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors',
+      }).addTo(map);
+    }
 
     // Update clicked marker
     if (clickedMarkerLayer) {

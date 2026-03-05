@@ -212,6 +212,7 @@
         showLine={showResult}
         disabled={showResult}
         countryBorder={showResult ? countryBorder : null}
+        hideLabels={gameState.currentQuestion?.category === 'COUNTRY'}
       />
       
       <!-- Click indicator -->
