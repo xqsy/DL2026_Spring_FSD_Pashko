@@ -2,6 +2,7 @@ import { json, type RequestEvent } from '@sveltejs/kit';
 import { prisma } from '$lib/server/db';
 import { haversineDistance, calculatePoints } from '$lib/utils/haversine';
 import { getDistanceToCountry } from '$lib/utils/countryBorders';
+import { getCountryBorderFeatureByName } from '$lib/server/countryBordersService';
 import { QuestionCategory } from '../../../../generated/prisma/enums.js';
 
 export async function POST({ request }: RequestEvent) {
@@ -27,10 +28,11 @@ export async function POST({ request }: RequestEvent) {
   if (question.category === QuestionCategory.COUNTRY) {
     // Extract country name from question text (e.g., "Где находится Франция?" -> "Франция")
     const countryName = extractCountryName(question.text);
+    const border = await getCountryBorderFeatureByName(countryName);
     distanceKm = getDistanceToCountry(
       clickedLat,
       clickedLng,
-      countryName,
+      border,
       question.correctLat,
       question.correctLng
     );

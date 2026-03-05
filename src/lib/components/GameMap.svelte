@@ -1,7 +1,6 @@
 <script lang="ts">
   import { onMount, onDestroy } from 'svelte';
   import { browser } from '$app/environment';
-  import { countriesGeoJSON } from '$lib/utils/countryGeoJSON';
 
   interface Props {
     onMapClick?: (lat: number, lng: number) => void;
@@ -9,7 +8,7 @@
     clickedMarker?: { lat: number; lng: number } | null;
     showLine?: boolean;
     disabled?: boolean;
-    countryName?: string | null;
+    countryBorder?: GeoJSON.Feature | null;
   }
 
   let {
@@ -18,15 +17,17 @@
     clickedMarker = null,
     showLine = false,
     disabled = false,
-    countryName = null
+    countryBorder = null
   }: Props = $props();
 
   let mapContainer: HTMLDivElement;
   let map: L.Map | null = null;
-  let clickedMarkerLayer: L.Marker | null = null;
-  let correctMarkerLayer: L.Marker | null = null;
+  let clickedMarkerLayer: L.CircleMarker | null = null;
+  let correctMarkerLayer: L.CircleMarker | null = null;
   let lineLayer: L.Polyline | null = null;
   let borderLayer: L.GeoJSON | null = null;
+
+  let mapReady = $state(false);
 
   let L: typeof import('leaflet');
 
@@ -51,16 +52,19 @@
       if (disabled || !onMapClick) return;
       onMapClick(e.latlng.lat, e.latlng.lng);
     });
+
+    mapReady = true;
   });
 
   $effect(() => {
-    if (!map || !L) return;
+    if (!mapReady || !map || !L) return;
 
     // Track dependencies explicitly
     const cm = clickedMarker;
     const com = correctMarker;
     const sl = showLine;
-    const cn = countryName;
+    const cb = countryBorder;
+    const dis = disabled;
 
     // Update clicked marker
     if (clickedMarkerLayer) {
@@ -68,13 +72,13 @@
       clickedMarkerLayer = null;
     }
     if (cm) {
-      const blueIcon = L.divIcon({
-        className: 'custom-marker clicked',
-        html: '<div style="width:24px;height:24px;background:#3b82f6;border-radius:50%;border:2px solid white;box-shadow:0 4px 6px rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;"><div style="width:8px;height:8px;background:white;border-radius:50%;"></div></div>',
-        iconSize: [24, 24],
-        iconAnchor: [12, 12],
-      });
-      clickedMarkerLayer = L.marker([cm.lat, cm.lng], { icon: blueIcon }).addTo(map);
+      clickedMarkerLayer = L.circleMarker([cm.lat, cm.lng], {
+        radius: 10,
+        color: '#ffffff',
+        weight: 2,
+        fillColor: '#3b82f6',
+        fillOpacity: 1,
+      }).addTo(map);
     }
 
     // Update correct marker
@@ -83,13 +87,13 @@
       correctMarkerLayer = null;
     }
     if (com) {
-      const greenIcon = L.divIcon({
-        className: 'custom-marker correct',
-        html: '<div style="width:32px;height:32px;background:#22c55e;border-radius:50%;border:2px solid white;box-shadow:0 4px 6px rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;"><span style="color:white;font-size:14px;">&#10003;</span></div>',
-        iconSize: [32, 32],
-        iconAnchor: [16, 16],
-      });
-      correctMarkerLayer = L.marker([com.lat, com.lng], { icon: greenIcon }).addTo(map);
+      correctMarkerLayer = L.circleMarker([com.lat, com.lng], {
+        radius: 12,
+        color: '#ffffff',
+        weight: 2,
+        fillColor: '#22c55e',
+        fillOpacity: 1,
+      }).addTo(map);
     }
 
     // Update line
@@ -112,8 +116,8 @@
       map.removeLayer(borderLayer);
       borderLayer = null;
     }
-    if (cn && countriesGeoJSON[cn]) {
-      borderLayer = L.geoJSON(countriesGeoJSON[cn], {
+    if (dis && cb) {
+      borderLayer = L.geoJSON(cb, {
         style: {
           color: '#f59e0b',
           weight: 2,

@@ -1,5 +1,7 @@
 import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
-import { countriesGeoJSON } from './countryGeoJSON';
+import pointToLineDistance from '@turf/point-to-line-distance';
+import polygonToLine from '@turf/polygon-to-line';
+import { point } from '@turf/helpers';
 
 /**
  * Check if a point is inside a country's boundaries using Turf.js
@@ -8,33 +10,25 @@ import { countriesGeoJSON } from './countryGeoJSON';
 export function getDistanceToCountry(
   clickedLat: number,
   clickedLng: number,
-  countryName: string,
+  countryBorder: GeoJSON.Feature | null,
   centerLat: number,
   centerLng: number
 ): number {
-  const geoJson = countriesGeoJSON[countryName];
-
-  if (!geoJson) {
+  if (!countryBorder) {
     // Fallback to center point distance if country not found
     return haversineDistance(clickedLat, clickedLng, centerLat, centerLng);
   }
 
   // Check if point is inside the country polygon using Turf.js
-  const point = {
-    type: 'Feature' as const,
-    properties: {},
-    geometry: {
-      type: 'Point' as const,
-      coordinates: [clickedLng, clickedLat] // GeoJSON uses [lng, lat]
-    }
-  };
+  const pt = point([clickedLng, clickedLat]);
 
-  if (booleanPointInPolygon(point, geoJson)) {
+  if (booleanPointInPolygon(pt, countryBorder as any)) {
     return 0; // Point is inside the country
   }
 
-  // Point is outside - calculate distance to center
-  return haversineDistance(clickedLat, clickedLng, centerLat, centerLng);
+  const line = polygonToLine(countryBorder as any);
+  const dist = pointToLineDistance(pt, line as any, { units: 'kilometers' });
+  return dist;
 }
 
 /**
@@ -57,5 +51,5 @@ function haversineDistance(lat1: number, lng1: number, lat2: number, lng2: numbe
  * Get GeoJSON feature for a country (for displaying on map)
  */
 export function getCountryGeoJSON(countryName: string) {
-  return countriesGeoJSON[countryName] || null;
+  return null;
 }

@@ -12,6 +12,7 @@
   let isLoading = $state(true);
   let isSubmitting = $state(false);
   let showExitModal = $state(false);
+  let countryBorder = $state<GeoJSON.Feature | null>(null);
 
   // Subscribe to game store
   let gameState = $state(getGame());
@@ -30,6 +31,7 @@
     isLoading = true;
     clickedPosition = null;
     showResult = false;
+    countryBorder = null;
 
     const excludeIds = gameState.answeredIds.join(',');
     const url = `/api/questions/random?${gameState.category ? `category=${gameState.category}&` : ''}exclude=${excludeIds}`;
@@ -63,6 +65,14 @@
     game.setAnswer(result);
     sync();
     showResult = true;
+    if (gameState.currentQuestion.category === 'COUNTRY') {
+      const name = extractCountryName(gameState.currentQuestion.text);
+      if (name) {
+        const borderRes = await fetch(`/api/countries/border?name=${encodeURIComponent(name)}`);
+        const borderJson = await borderRes.json();
+        countryBorder = borderJson?.feature ?? null;
+      }
+    }
     isSubmitting = false;
   }
 
@@ -189,7 +199,7 @@
         correctMarker={showResult && gameState.lastAnswer ? { lat: gameState.lastAnswer.correctLat, lng: gameState.lastAnswer.correctLng } : null}
         showLine={showResult}
         disabled={showResult}
-        countryName={gameState.currentQuestion?.category === 'COUNTRY' ? extractCountryName(gameState.currentQuestion.text) : null}
+        countryBorder={showResult ? countryBorder : null}
       />
       
       <!-- Click indicator -->
