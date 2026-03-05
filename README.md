@@ -1,42 +1,96 @@
-# sv
+# 🌍 GeoHoot — Географическая викторина
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+Интерактивное веб-приложение для проверки знаний географии в игровой форме. Пользователь угадывает местоположение стран, городов и достопримечательностей на карте мира.
 
-## Creating a project
+## 🎮 Возможности
 
-If you're seeing this, you've probably already done this step. Congrats!
+- **Интерактивная карта** — кликайте на карту, чтобы отметить ответ
+- **Система очков** — чем ближе к правильному месту, тем больше очков
+- **Режимы игры** — 10 вопросов или бесконечный режим
+- **Категории** — столицы, достопримечательности, города, страны
+- **Подсказки** — помощь при затруднении (-100 очков)
+- **Таблица лидеров** — соревнование с другими игроками
 
-```sh
-# create a new project
-npx sv create my-app
+## 🛠 Технологии
+
+| Компонент | Технология |
+|-----------|------------|
+| Framework | SvelteKit 2.x |
+| Map | Leaflet |
+| Database | SQLite + Prisma 7 |
+| Styling | TailwindCSS |
+| Build | Vite |
+
+## 📦 Установка
+
+```bash
+# Клонировать репозиторий
+git clone <repo-url>
+cd geohoot
+
+# Установить зависимости
+npm install
+
+# Сгенерировать Prisma клиент
+npx prisma generate
+
+# Заполнить базу вопросов
+npx tsx prisma/seed.ts
+
+# Запустить dev-сервер
+npm run dev
 ```
 
-To recreate this project with the same configuration:
+## 🚀 Запуск
 
-```sh
-# recreate this project
-npx sv@0.12.5 create --template minimal --types ts --no-install .
-```
-
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```sh
+```bash
+# Режим разработки
 npm run dev
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
-
-```sh
+# Продакшн сборка
 npm run build
+npm run preview
 ```
 
-You can preview the production build with `npm run preview`.
+## 📁 Структура проекта
 
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+```
+geohoot/
+├── docs/
+│   ├── design.md           # Документация проектирования
+│   └── AI_REFLECTION.md    # Рефлексия по использованию AI
+├── prisma/
+│   ├── schema.prisma       # Схема базы данных
+│   └── seed.ts             # Начальные данные
+├── src/
+│   ├── lib/
+│   │   ├── components/     # Svelte компоненты
+│   │   ├── stores/         # Состояние игры
+│   │   └── server/         # Server-side утилиты
+│   └── routes/
+│       ├── api/            # API endpoints
+│       ├── play/           # Игровая страница
+│       ├── results/        # Результаты
+│       └── leaderboard/    # Таблица лидеров
+└── README.md
+```
+
+## 🎯 API Endpoints
+
+| Метод | Endpoint | Описание |
+|-------|----------|----------|
+| GET | `/api/questions/random` | Случайный вопрос |
+| POST | `/api/sessions` | Создать игровую сессию |
+| POST | `/api/answers` | Отправить ответ |
+| GET | `/api/leaderboard` | Таблица лидеров |
+| POST | `/api/leaderboard` | Сохранить результат |
+
+## 📊 Алгоритм очков
+
+- **Максимум**: 1000 очков за точное попадание
+- **Штраф**: -1 очко за каждый км от цели
+- **Подсказка**: -100 очков
+
+## 📝 Лицензия
+
+MIT
