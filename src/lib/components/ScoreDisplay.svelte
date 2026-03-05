@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { onDestroy } from 'svelte';
+
   interface Props {
     points: number;
     distanceKm: number;
@@ -10,24 +12,40 @@
 
   let displayPoints = $state(0);
   let hasAnimated = $state(false);
+  let rafId: number | null = null;
+
+  onDestroy(() => {
+    if (rafId !== null) cancelAnimationFrame(rafId);
+  });
 
   $effect(() => {
-    if (showAnimation && !hasAnimated) {
+    const pts = points;
+    const animateEnabled = showAnimation;
+
+    if (rafId !== null) {
+      cancelAnimationFrame(rafId);
+      rafId = null;
+    }
+
+    hasAnimated = false;
+
+    if (animateEnabled) {
       const duration = 1000;
       const start = performance.now();
       const animate = (now: number) => {
         const progress = Math.min((now - start) / duration, 1);
-        displayPoints = Math.floor(progress * points);
+        displayPoints = Math.floor(progress * pts);
         if (progress < 1) {
-          requestAnimationFrame(animate);
+          rafId = requestAnimationFrame(animate);
         } else {
-          displayPoints = points;
+          displayPoints = pts;
           hasAnimated = true;
+          rafId = null;
         }
       };
-      requestAnimationFrame(animate);
+      rafId = requestAnimationFrame(animate);
     } else {
-      displayPoints = points;
+      displayPoints = pts;
     }
   });
 

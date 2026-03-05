@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
+  import { onMount, onDestroy } from 'svelte';
   import { goto } from '$app/navigation';
   import { game, getGame } from '$lib/stores/game';
   import GameMap from '$lib/components/GameMap.svelte';
@@ -16,11 +16,7 @@
 
   // Subscribe to game store
   let gameState = $state(getGame());
-  
-  // Sync after each action
-  function sync() {
-    gameState = getGame();
-  }
+  let unsubscribe: (() => void) | null = null;
 
   async function loadQuestion() {
     if (!gameState.sessionId) {
@@ -36,22 +32,27 @@
     const excludeIds = gameState.answeredIds.join(',');
     const url = `/api/questions/random?${gameState.category ? `category=${gameState.category}&` : ''}exclude=${excludeIds}`;
 
-    const res = await fetch(url);
-    if (!res.ok) {
-      // No more questions available (e.g. excluded all in this category)
-      if (res.status === 404) {
-        game.finish();
-        goto('/results');
-        return;
+    try {
+      const res = await fetch(url);
+      if (!res.ok) {
+        // No more questions available (e.g. excluded all in this category)
+        if (res.status === 404) {
+          game.finish();
+          goto('/results');
+          return;
+        }
+
+        throw new Error(`Failed to load question: ${res.status}`);
       }
 
-      throw new Error(`Failed to load question: ${res.status}`);
+      const question = await res.json();
+      game.setQuestion(question);
+    } catch (e) {
+      console.error(e);
+      goto('/');
+    } finally {
+      isLoading = false;
     }
-    const question = await res.json();
-
-    game.setQuestion(question);
-    sync();
-    isLoading = false;
   }
 
   async function submitAnswer() {
@@ -59,31 +60,42 @@
 
     isSubmitting = true;
 
-    const res = await fetch('/api/answers', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        questionId: gameState.currentQuestion.id,
-        clickedLat: clickedPosition.lat,
-        clickedLng: clickedPosition.lng,
-        sessionId: gameState.sessionId,
-        usedHint: gameState.usedHint,
-      }),
-    });
+    try {
+      const res = await fetch('/api/answers', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          questionId: gameState.currentQuestion.id,
+          clickedLat: clickedPosition.lat,
+          clickedLng: clickedPosition.lng,
+          sessionId: gameState.sessionId,
+          usedHint: gameState.usedHint,
+        }),
+      });
 
-    const result = await res.json();
-    game.setAnswer(result);
-    sync();
-    showResult = true;
-    if (gameState.currentQuestion.category === 'COUNTRY') {
-      const name = extractCountryName(gameState.currentQuestion.text);
-      if (name) {
-        const borderRes = await fetch(`/api/countries/border?name=${encodeURIComponent(name)}`);
-        const borderJson = await borderRes.json();
-        countryBorder = borderJson?.feature ?? null;
+      if (!res.ok) throw new Error(`Failed to submit answer: ${res.status}`);
+      const result = await res.json();
+
+      game.setAnswer(result);
+      showResult = true;
+
+      if (gameState.currentQuestion.category === 'COUNTRY') {
+        const name = extractCountryName(gameState.currentQuestion.text);
+        if (name) {
+          const borderRes = await fetch(`/api/countries/border?name=${encodeURIComponent(name)}`);
+          if (borderRes.ok) {
+            const borderJson = await borderRes.json();
+            countryBorder = borderJson?.feature ?? null;
+          } else {
+            countryBorder = null;
+          }
+        }
       }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      isSubmitting = false;
     }
-    isSubmitting = false;
   }
 
   async function nextQuestion() {
@@ -99,11 +111,18 @@
 
   function useHint() {
     game.useHint();
-    sync();
   }
 
   onMount(() => {
+    unsubscribe = game.subscribe((s) => {
+      gameState = s;
+    });
     loadQuestion();
+  });
+
+  onDestroy(() => {
+    unsubscribe?.();
+    unsubscribe = null;
   });
 
   const handleMapClick = (lat: number, lng: number) => {
@@ -118,7 +137,7 @@
     return match ? match[1] : null;
   }
 
-  const isLastQuestion = gameState.questionNumber >= gameState.totalQuestions;
+  const isLastQuestion = $derived(gameState.questionNumber >= gameState.totalQuestions);
 
   function handleExit() {
     // Show modal only if player has score or answered questions
