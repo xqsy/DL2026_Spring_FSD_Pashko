@@ -25,6 +25,7 @@
   let mapContainer: HTMLDivElement;
   let map: L.Map | null = null;
   let tileLayer: L.TileLayer | null = null;
+  let tileLayerKey: 'labels' | 'nolabels' | null = null;
   let clickedMarkerLayer: L.CircleMarker | null = null;
   let correctMarkerLayer: L.CircleMarker | null = null;
   let lineLayer: L.Polyline | null = null;
@@ -60,20 +61,18 @@
   $effect(() => {
     if (!mapReady || !map || !L) return;
 
-    // Track dependencies explicitly
-    const cm = clickedMarker;
-    const com = correctMarker;
-    const sl = showLine;
-    const cb = countryBorder;
-    const dis = disabled;
-    const hl = hideLabels;
-
     // Update tile layer (switch to no-labels tiles for country guessing)
+    const hl = hideLabels;
+    const nextKey: 'labels' | 'nolabels' = hl ? 'nolabels' : 'labels';
+
+    if (tileLayerKey === nextKey && tileLayer) return;
+
     if (tileLayer) {
       map.removeLayer(tileLayer);
       tileLayer = null;
     }
-    if (hl) {
+
+    if (nextKey === 'nolabels') {
       tileLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png', {
         attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
         subdomains: 'abcd',
@@ -84,6 +83,19 @@
         attribution: '&copy; OpenStreetMap contributors',
       }).addTo(map);
     }
+
+    tileLayerKey = nextKey;
+  });
+
+  $effect(() => {
+    if (!mapReady || !map || !L) return;
+
+    // Track dependencies explicitly
+    const cm = clickedMarker;
+    const com = correctMarker;
+    const sl = showLine;
+    const cb = countryBorder;
+    const dis = disabled;
 
     // Update clicked marker
     if (clickedMarkerLayer) {
