@@ -39,13 +39,16 @@
 <div class="min-h-[80vh] flex items-center justify-center px-4">
   <div class="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md">
     <h1 class="text-2xl font-bold text-gray-800 mb-2">🔐 Админ вход</h1>
-    <p class="text-gray-600 mb-6">Введите ADMIN_TOKEN</p>
+    <p class="text-gray-600 mb-6">Введите код администратора</p>
 
+    <label for="admin-code" class="block text-sm font-medium text-gray-700 mb-2">Код</label>
     <input
       type="password"
+      id="admin-code"
       bind:value={token}
       class="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-      placeholder="ADMIN_TOKEN"
+      placeholder="Введите код"
+      autocomplete="current-password"
     />
 
     {#if errorMessage}
