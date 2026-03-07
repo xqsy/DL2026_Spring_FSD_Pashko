@@ -137,7 +137,7 @@
 
 <div class="container mx-auto px-4 py-8 max-w-6xl">
   <div class="flex items-center justify-between mb-6">
-    <h1 class="text-3xl font-black text-white">Предложения вопросов</h1>
+    <h1 class="text-3xl font-black theme-heading">Предложения вопросов</h1>
     <div class="flex gap-2">
       <button
         onclick={() => goto('/admin/questions')}
@@ -163,19 +163,19 @@
   <div class="mb-6 flex gap-2">
     <button
       onclick={() => (selectedStatus = 'PENDING')}
-      class="px-4 py-2 rounded-lg text-sm font-semibold transition-all {selectedStatus === 'PENDING' ? 'bg-teal-500/15 text-teal-300 border border-teal-500/30' : 'bg-white/5 text-slate-400 border border-white/10 hover:bg-white/10'}"
+      class="px-4 py-2 rounded-lg text-sm font-semibold transition-all {selectedStatus === 'PENDING' ? 'bg-teal-500/15 text-teal-300 border border-teal-500/30' : 'theme-inline-surface theme-muted hover:border-teal-500/20'}"
     >
       Pending
     </button>
     <button
       onclick={() => (selectedStatus = 'APPROVED')}
-      class="px-4 py-2 rounded-lg text-sm font-semibold transition-all {selectedStatus === 'APPROVED' ? 'bg-teal-500/15 text-teal-300 border border-teal-500/30' : 'bg-white/5 text-slate-400 border border-white/10 hover:bg-white/10'}"
+      class="px-4 py-2 rounded-lg text-sm font-semibold transition-all {selectedStatus === 'APPROVED' ? 'bg-teal-500/15 text-teal-300 border border-teal-500/30' : 'theme-inline-surface theme-muted hover:border-teal-500/20'}"
     >
       Approved
     </button>
     <button
       onclick={() => (selectedStatus = 'REJECTED')}
-      class="px-4 py-2 rounded-lg text-sm font-semibold transition-all {selectedStatus === 'REJECTED' ? 'bg-teal-500/15 text-teal-300 border border-teal-500/30' : 'bg-white/5 text-slate-400 border border-white/10 hover:bg-white/10'}"
+      class="px-4 py-2 rounded-lg text-sm font-semibold transition-all {selectedStatus === 'REJECTED' ? 'bg-teal-500/15 text-teal-300 border border-teal-500/30' : 'theme-inline-surface theme-muted hover:border-teal-500/20'}"
     >
       Rejected
     </button>
@@ -190,21 +190,21 @@
   {/if}
 
   {#if isLoading}
-    <div class="text-center py-12 text-slate-500">Загрузка...</div>
+    <div class="text-center py-12 theme-soft">Загрузка...</div>
   {:else}
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
       <div class="glass rounded-2xl overflow-hidden">
-        <div class="px-4 py-3 border-b border-white/5 text-sm text-slate-500">
+        <div class="px-4 py-3 border-b theme-border text-sm theme-soft">
           Всего: {suggestions.length}
         </div>
-        <div class="divide-y divide-white/5 max-h-[70vh] overflow-auto">
+        <div class="divide-y theme-border max-h-[70vh] overflow-auto">
           {#each suggestions as s (s.id)}
             <button
               class="w-full text-left px-4 py-3 hover:bg-white/5 transition-colors {selectedId === s.id ? 'bg-teal-500/10 border-l-2 border-l-teal-400' : ''}"
               onclick={() => (selectedId = s.id)}
             >
-              <div class="font-medium text-slate-200 line-clamp-2">{s.questionText}</div>
-              <div class="text-xs text-slate-500 mt-1">
+              <div class="font-medium theme-text line-clamp-2">{s.questionText}</div>
+              <div class="text-xs theme-soft mt-1">
                 {new Date(s.createdAt).toLocaleString('ru-RU')}
               </div>
             </button>
@@ -214,19 +214,19 @@
 
       <div class="lg:col-span-2">
         {#if !selected}
-          <div class="glass rounded-2xl p-6 text-slate-500">
+          <div class="glass rounded-2xl p-6 theme-soft">
             Выберите предложение слева
           </div>
         {:else}
           <div class="glass rounded-2xl p-6">
             <div class="flex items-start justify-between gap-4">
               <div>
-                <div class="text-lg font-bold text-white">{selected.questionText}</div>
-                <div class="text-sm text-slate-400 mt-1">
+                <div class="text-lg font-bold theme-heading">{selected.questionText}</div>
+                <div class="text-sm theme-muted mt-1">
                   {selected.country ? `Страна: ${selected.country}` : ''}
                   {selected.city ? ` Город: ${selected.city}` : ''}
                 </div>
-                <div class="text-sm text-slate-500 mt-2">
+                <div class="text-sm theme-soft mt-2">
                   {selected.lat.toFixed(5)}, {selected.lng.toFixed(5)}
                 </div>
                 {#if selected.createdQuestionId}
@@ -251,7 +251,7 @@
             </div>
 
             <div class="mt-4">
-              <label for="admin-note" class="block text-sm font-semibold text-slate-400 mb-2 uppercase tracking-wider">Admin note</label>
+              <label for="admin-note" class="block text-sm font-semibold theme-muted mb-2 uppercase tracking-wider">Admin note</label>
               <textarea
                 id="admin-note"
                 bind:value={adminNote}
@@ -261,7 +261,7 @@
             </div>
 
             <div class="mt-4">
-              <label for="approve-category" class="block text-sm font-semibold text-slate-400 mb-2 uppercase tracking-wider">Категория при добавлении</label>
+              <label for="approve-category" class="block text-sm font-semibold theme-muted mb-2 uppercase tracking-wider">Категория при добавлении</label>
               <select
                 id="approve-category"
                 bind:value={approveCategory}

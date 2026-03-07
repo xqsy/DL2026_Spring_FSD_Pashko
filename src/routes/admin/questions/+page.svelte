@@ -271,7 +271,7 @@
 
 <div class="container mx-auto px-4 py-8 max-w-6xl">
   <div class="flex items-center justify-between mb-6">
-    <h1 class="text-3xl font-black text-white">Вопросы</h1>
+    <h1 class="text-3xl font-black theme-heading">Вопросы</h1>
     <div class="flex gap-2">
       <button
         onclick={() => goto('/admin/suggestions')}
@@ -297,7 +297,7 @@
   <div class="glass rounded-2xl p-4 mb-6">
     <div class="grid grid-cols-1 md:grid-cols-12 gap-3 items-end">
       <div class="md:col-span-6">
-        <label for="questions-search" class="block text-sm font-semibold text-slate-400 mb-1 uppercase tracking-wider">Поиск</label>
+        <label for="questions-search" class="block text-sm font-semibold theme-muted mb-1 uppercase tracking-wider">Поиск</label>
         <input
           id="questions-search"
           bind:value={q}
@@ -306,7 +306,7 @@
         />
       </div>
       <div class="md:col-span-3">
-        <label for="questions-filter-category" class="block text-sm font-semibold text-slate-400 mb-1 uppercase tracking-wider">Категория</label>
+        <label for="questions-filter-category" class="block text-sm font-semibold theme-muted mb-1 uppercase tracking-wider">Категория</label>
         <select
           id="questions-filter-category"
           bind:value={category}
@@ -343,25 +343,25 @@
   {/if}
 
   {#if isLoading}
-    <div class="text-center py-12 text-slate-500">Загрузка...</div>
+    <div class="text-center py-12 theme-soft">Загрузка...</div>
   {:else}
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
       <div class="glass rounded-2xl overflow-hidden">
-        <div class="px-4 py-3 border-b border-white/5 text-sm text-slate-500 flex items-center justify-between">
+        <div class="px-4 py-3 border-b theme-border text-sm theme-soft flex items-center justify-between">
           <div>Всего: {questions.length}</div>
           <span class="badge-teal text-xs">{mode === 'CREATE' ? 'Создание' : 'Редактирование'}</span>
         </div>
-        <div class="divide-y divide-white/5 max-h-[70vh] overflow-auto">
+        <div class="divide-y theme-border max-h-[70vh] overflow-auto">
           {#if questions.length === 0}
-            <div class="px-4 py-6 text-sm text-slate-500">Нет вопросов по фильтру</div>
+            <div class="px-4 py-6 text-sm theme-soft">Нет вопросов по фильтру</div>
           {:else}
             {#each questions as x (x.id)}
               <button
                 class="w-full text-left px-4 py-3 hover:bg-white/5 transition-colors {selectedId === x.id && mode === 'EDIT' ? 'bg-teal-500/10 border-l-2 border-l-teal-400' : ''}"
                 onclick={() => startEdit(x.id)}
               >
-                <div class="font-medium text-slate-200 line-clamp-2">{x.text}</div>
-                <div class="text-xs text-slate-500 mt-1">{x.category} · diff {x.difficulty}</div>
+                <div class="font-medium theme-text line-clamp-2">{x.text}</div>
+                <div class="text-xs theme-soft mt-1">{x.category} · diff {x.difficulty}</div>
               </button>
             {/each}
           {/if}
@@ -372,11 +372,11 @@
         <div class="glass rounded-2xl p-6">
           <div class="flex items-start justify-between gap-4">
             <div>
-              <div class="text-lg font-bold text-white">
+              <div class="text-lg font-bold theme-heading">
                 {mode === 'CREATE' ? 'Создать вопрос' : selected ? 'Редактировать вопрос' : 'Выберите вопрос'}
               </div>
               {#if mode === 'EDIT' && selected}
-                <div class="text-sm text-slate-500 mt-1 font-mono">ID: {selected.id}</div>
+                <div class="text-sm theme-soft mt-1 font-mono">ID: {selected.id}</div>
               {/if}
             </div>
             {#if mode === 'EDIT' && selected}
@@ -392,7 +392,7 @@
 
           <div class="mt-4 grid grid-cols-1 md:grid-cols-12 gap-3">
             <div class="md:col-span-12">
-              <label for="question-text" class="block text-sm font-semibold text-slate-400 mb-1 uppercase tracking-wider">Текст</label>
+              <label for="question-text" class="block text-sm font-semibold theme-muted mb-1 uppercase tracking-wider">Текст</label>
               <textarea
                 id="question-text"
                 bind:value={draftText}
@@ -402,7 +402,7 @@
             </div>
 
             <div class="md:col-span-4">
-              <label for="question-category" class="block text-sm font-semibold text-slate-400 mb-1 uppercase tracking-wider">Категория</label>
+              <label for="question-category" class="block text-sm font-semibold theme-muted mb-1 uppercase tracking-wider">Категория</label>
               <select
                 id="question-category"
                 bind:value={draftCategory}
@@ -416,7 +416,7 @@
             </div>
 
             <div class="md:col-span-4">
-              <label for="question-difficulty" class="block text-sm font-semibold text-slate-400 mb-1 uppercase tracking-wider">Сложность</label>
+              <label for="question-difficulty" class="block text-sm font-semibold theme-muted mb-1 uppercase tracking-wider">Сложность</label>
               <input
                 id="question-difficulty"
                 type="number"
@@ -428,7 +428,7 @@
             </div>
 
             <div class="md:col-span-4">
-              <label for="question-hint" class="block text-sm font-semibold text-slate-400 mb-1 uppercase tracking-wider">Подсказка</label>
+              <label for="question-hint" class="block text-sm font-semibold theme-muted mb-1 uppercase tracking-wider">Подсказка</label>
               <input
                 id="question-hint"
                 bind:value={draftHint}
@@ -453,7 +453,7 @@
             />
           </div>
 
-          <div class="mt-3 text-sm text-slate-500">
+          <div class="mt-3 text-sm theme-soft">
             {#if draftLat !== null && draftLng !== null}
               Выбрано: {draftLat.toFixed(5)}, {draftLng.toFixed(5)}
             {:else}

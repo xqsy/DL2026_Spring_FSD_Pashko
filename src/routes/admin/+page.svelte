@@ -42,10 +42,10 @@
     <div class="w-14 h-14 mx-auto mb-4 rounded-full bg-teal-500/15 border border-teal-500/20 flex items-center justify-center">
       <svg class="w-7 h-7 text-teal-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
     </div>
-    <h1 class="text-2xl font-bold text-white mb-1 text-center">Админ вход</h1>
-    <p class="text-slate-400 mb-6 text-sm text-center">Введите код администратора</p>
+    <h1 class="text-2xl font-bold theme-heading mb-1 text-center">Админ вход</h1>
+    <p class="theme-muted mb-6 text-sm text-center">Введите код администратора</p>
 
-    <label for="admin-code" class="block text-sm font-semibold text-slate-400 mb-2 uppercase tracking-wider">Код</label>
+    <label for="admin-code" class="block text-sm font-semibold theme-muted mb-2 uppercase tracking-wider">Код</label>
     <input
       type="password"
       id="admin-code"
