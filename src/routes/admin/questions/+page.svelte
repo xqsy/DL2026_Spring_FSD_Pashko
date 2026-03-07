@@ -1,5 +1,6 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
+  import { onDestroy } from 'svelte';
   import GameMap from '$lib/components/GameMap.svelte';
 
   type QuestionCategory = 'CAPITAL' | 'LANDMARK' | 'CITY' | 'COUNTRY';
@@ -32,9 +33,11 @@
 
   let isLoading = $state(true);
   let errorMessage = $state<string | null>(null);
+  let successMessage = $state<string | null>(null);
 
   let isSaving = $state(false);
   let isDeleting = $state(false);
+  let successTimer: ReturnType<typeof setTimeout> | null = null;
 
   let mode = $state<'EDIT' | 'CREATE'>('EDIT');
 
@@ -46,6 +49,15 @@
   let draftLng = $state<number | null>(null);
 
   const selected = $derived(questions.find((x) => x.id === selectedId) ?? null);
+
+  function showSuccess(message: string) {
+    successMessage = message;
+    if (successTimer) clearTimeout(successTimer);
+    successTimer = setTimeout(() => {
+      successMessage = null;
+      successTimer = null;
+    }, 3000);
+  }
 
   function syncDraftFromSelected() {
     if (!selected) return;
@@ -154,6 +166,7 @@
           mode = 'EDIT';
           selectedId = created.id;
         }
+        showSuccess('Вопрос успешно создан');
       } else {
         if (!selected) return;
         const res = await fetch('/api/admin/questions', {
@@ -181,6 +194,7 @@
         }
 
         await load();
+        showSuccess('Изменения успешно сохранены');
       }
     } catch (e) {
       console.error(e);
@@ -217,6 +231,7 @@
       }
 
       await load();
+      showSuccess('Вопрос успешно удалён');
     } catch (e) {
       console.error(e);
       errorMessage = 'Не удалось удалить вопрос';
@@ -229,6 +244,10 @@
     await fetch('/api/admin/logout', { method: 'POST' }).catch(() => null);
     goto('/');
   }
+
+  onDestroy(() => {
+    if (successTimer) clearTimeout(successTimer);
+  });
 
   $effect(() => {
     load();
@@ -317,6 +336,10 @@
 
   {#if errorMessage}
     <div class="mb-4 p-3 bg-red-50 text-red-700 rounded-xl">{errorMessage}</div>
+  {/if}
+
+  {#if successMessage}
+    <div class="mb-4 p-3 bg-green-50 text-green-700 rounded-xl">{successMessage}</div>
   {/if}
 
   {#if isLoading}

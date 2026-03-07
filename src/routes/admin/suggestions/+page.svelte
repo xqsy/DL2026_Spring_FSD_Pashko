@@ -1,5 +1,6 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
+  import { onDestroy, onMount } from 'svelte';
   import GameMap from '$lib/components/GameMap.svelte';
 
   type SuggestionStatus = 'PENDING' | 'APPROVED' | 'REJECTED';
@@ -24,11 +25,22 @@
 
   let isLoading = $state(true);
   let errorMessage = $state<string | null>(null);
+  let successMessage = $state<string | null>(null);
   let adminNote = $state('');
   let isActing = $state(false);
   let approveCategory = $state<QuestionCategory>('CITY');
+  let successTimer: ReturnType<typeof setTimeout> | null = null;
 
   const selected = $derived(suggestions.find((s) => s.id === selectedId) ?? null);
+
+  function showSuccess(message: string) {
+    successMessage = message;
+    if (successTimer) clearTimeout(successTimer);
+    successTimer = setTimeout(() => {
+      successMessage = null;
+      successTimer = null;
+    }, 3000);
+  }
 
   async function load() {
     isLoading = true;
@@ -92,6 +104,7 @@
       if (!res.ok) throw new Error(`Failed: ${res.status}`);
 
       await load();
+      showSuccess(action === 'APPROVE' ? 'Предложение успешно одобрено' : 'Предложение успешно отклонено');
     } catch (e) {
       console.error(e);
       errorMessage = 'Не удалось выполнить действие';
@@ -104,6 +117,18 @@
     await fetch('/api/admin/logout', { method: 'POST' }).catch(() => null);
     goto('/');
   }
+
+  onMount(() => {
+    const flash = sessionStorage.getItem('admin_flash_success');
+    if (flash) {
+      sessionStorage.removeItem('admin_flash_success');
+      showSuccess(flash);
+    }
+  });
+
+  onDestroy(() => {
+    if (successTimer) clearTimeout(successTimer);
+  });
 </script>
 
 <svelte:head>
@@ -158,6 +183,10 @@
 
   {#if errorMessage}
     <div class="mb-4 p-3 bg-red-50 text-red-700 rounded-xl">{errorMessage}</div>
+  {/if}
+
+  {#if successMessage}
+    <div class="mb-4 p-3 bg-green-50 text-green-700 rounded-xl">{successMessage}</div>
   {/if}
 
   {#if isLoading}

@@ -22,10 +22,11 @@
         throw new Error(body?.error || `Ошибка: ${res.status}`);
       }
 
+      sessionStorage.setItem('admin_flash_success', 'Вход выполнен успешно');
       goto('/admin/suggestions');
     } catch (e) {
       console.error(e);
-      errorMessage = 'Неверный токен';
+      errorMessage = 'Не удалось выполнить вход';
     } finally {
       isSubmitting = false;
     }
