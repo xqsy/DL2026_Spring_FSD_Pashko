@@ -7,6 +7,7 @@
     correctMarker?: { lat: number; lng: number } | null;
     clickedMarker?: { lat: number; lng: number } | null;
     showLine?: boolean;
+    showCorrectMarker?: boolean;
     disabled?: boolean;
     countryBorder?: GeoJSON.Feature | null;
     hideLabels?: boolean;
@@ -17,6 +18,7 @@
     correctMarker = null,
     clickedMarker = null,
     showLine = false,
+    showCorrectMarker = true,
     disabled = false,
     countryBorder = null,
     hideLabels = false
@@ -30,10 +32,37 @@
   let correctMarkerLayer: L.CircleMarker | null = null;
   let lineLayer: L.Polyline | null = null;
   let borderLayer: L.GeoJSON | null = null;
+  let lastCameraAnimationKey: string | null = null;
 
   let mapReady = $state(false);
 
   let L: typeof import('leaflet');
+
+  function normalizeLngAroundReference(targetLng: number, referenceLng: number) {
+    let normalizedLng = targetLng;
+
+    while (normalizedLng - referenceLng > 180) {
+      normalizedLng -= 360;
+    }
+
+    while (normalizedLng - referenceLng < -180) {
+      normalizedLng += 360;
+    }
+
+    return normalizedLng;
+  }
+
+  function getRenderableCorrectMarker(
+    correct: { lat: number; lng: number },
+    clicked: { lat: number; lng: number } | null
+  ) {
+    const referenceLng = clicked?.lng ?? map?.getCenter().lng ?? correct.lng;
+
+    return {
+      lat: correct.lat,
+      lng: normalizeLngAroundReference(correct.lng, referenceLng)
+    };
+  }
 
   onMount(async () => {
     if (!browser) return;
@@ -45,7 +74,6 @@
       zoom: 2,
       minZoom: 1,
       maxZoom: 18,
-      worldCopyJump: true,
     });
 
     // Tile layer is managed reactively in $effect (to support hideLabels changes)
@@ -94,8 +122,10 @@
     const cm = clickedMarker;
     const com = correctMarker;
     const sl = showLine;
+    const scm = showCorrectMarker;
     const cb = countryBorder;
     const dis = disabled;
+    const renderableCorrectMarker = com ? getRenderableCorrectMarker(com, cm) : null;
 
     // Update clicked marker
     if (clickedMarkerLayer) {
@@ -117,8 +147,8 @@
       map.removeLayer(correctMarkerLayer);
       correctMarkerLayer = null;
     }
-    if (com) {
-      correctMarkerLayer = L.circleMarker([com.lat, com.lng], {
+    if (renderableCorrectMarker && scm) {
+      correctMarkerLayer = L.circleMarker([renderableCorrectMarker.lat, renderableCorrectMarker.lng], {
         radius: 12,
         color: '#ffffff',
         weight: 2,
@@ -132,11 +162,11 @@
       map.removeLayer(lineLayer);
       lineLayer = null;
     }
-    if (sl && cm && com) {
+    if (sl && cm && renderableCorrectMarker) {
       lineLayer = L.polyline(
         [
           [cm.lat, cm.lng],
-          [com.lat, com.lng],
+          [renderableCorrectMarker.lat, renderableCorrectMarker.lng],
         ],
         { color: '#ef4444', weight: 3, dashArray: '10, 10' }
       ).addTo(map);
@@ -157,6 +187,64 @@
         }
       }).addTo(map);
     }
+  });
+
+  $effect(() => {
+    if (!mapReady || !map || !L) return;
+
+    const cm = clickedMarker;
+    const com = correctMarker;
+    const scm = showCorrectMarker;
+    const cb = countryBorder;
+    const dis = disabled;
+
+    if (!dis || !cm || !com) {
+      lastCameraAnimationKey = null;
+      return;
+    }
+
+    const animationKey = `${cm.lat}:${cm.lng}:${com.lat}:${com.lng}`;
+    if (lastCameraAnimationKey === animationKey) return;
+
+    lastCameraAnimationKey = animationKey;
+
+    const clickedLatLng = L.latLng(cm.lat, cm.lng);
+
+    if (!scm && cb && borderLayer) {
+      const borderBounds = borderLayer.getBounds();
+
+      if (borderBounds.isValid()) {
+        const expandedBounds = borderBounds.extend(clickedLatLng);
+        map.flyToBounds(expandedBounds, {
+          padding: [48, 48],
+          maxZoom: 5,
+          animate: true,
+          duration: 1.6,
+        });
+        return;
+      }
+    }
+
+    const renderableCorrectMarker = getRenderableCorrectMarker(com, cm);
+    const correctLatLng = L.latLng(renderableCorrectMarker.lat, renderableCorrectMarker.lng);
+    const distanceMeters = clickedLatLng.distanceTo(correctLatLng);
+    const isTooFar = distanceMeters > 2500000;
+
+    if (isTooFar) {
+      map.flyTo(correctLatLng, 4, {
+        animate: true,
+        duration: 1.6,
+      });
+      return;
+    }
+
+    const bounds = L.latLngBounds([clickedLatLng, correctLatLng]);
+    map.flyToBounds(bounds, {
+      padding: [48, 48],
+      maxZoom: 6,
+      animate: true,
+      duration: 1.6,
+    });
   });
 
   onDestroy(() => {
