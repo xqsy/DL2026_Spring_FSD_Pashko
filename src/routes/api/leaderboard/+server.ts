@@ -1,14 +1,20 @@
 import { json, type RequestEvent } from '@sveltejs/kit';
 import { prisma } from '$lib/server/db';
-import { GameMode } from '../../../../generated/prisma/enums.ts';
+import { GameMode, QuestionCategory } from '../../../../generated/prisma/enums.ts';
 
 export async function GET({ url }: RequestEvent) {
   const mode = url.searchParams.get('mode');
-  const limit = parseInt(url.searchParams.get('limit') || '10');
+  const category = url.searchParams.get('category');
+  const parsedLimit = parseInt(url.searchParams.get('limit') || '10');
+  const limit = Number.isFinite(parsedLimit) ? Math.min(Math.max(parsedLimit, 1), 100) : 10;
 
   const where: Record<string, unknown> = {};
   if (mode === 'FIXED_10' || mode === 'ENDLESS') {
     where.mode = mode as GameMode;
+  }
+
+  if (category === 'CAPITAL' || category === 'LANDMARK' || category === 'CITY' || category === 'COUNTRY') {
+    where.category = category as QuestionCategory;
   }
 
   const entries = await prisma.leaderboardEntry.findMany({
@@ -26,14 +32,24 @@ export async function GET({ url }: RequestEvent) {
 export async function POST({ request }: RequestEvent) {
   const body = await request.json();
   const { playerName, score, mode, category, sessionId } = body;
+  const normalizedCategory =
+    category === 'CAPITAL' || category === 'LANDMARK' || category === 'CITY' || category === 'COUNTRY'
+      ? (category as QuestionCategory)
+      : null;
 
-  if (!playerName || score === undefined || !mode) {
+  if (
+    typeof playerName !== 'string' ||
+    !playerName.trim() ||
+    typeof score !== 'number' ||
+    !Number.isFinite(score) ||
+    (mode !== 'FIXED_10' && mode !== 'ENDLESS')
+  ) {
     return json({ error: 'Missing required fields' }, { status: 400 });
   }
 
   // Mark session as completed
-  if (sessionId) {
-    await prisma.gameSession.update({
+  if (typeof sessionId === 'string' && sessionId) {
+    await prisma.gameSession.updateMany({
       where: { id: sessionId },
       data: {
         isCompleted: true,
@@ -44,11 +60,11 @@ export async function POST({ request }: RequestEvent) {
 
   const entry = await prisma.leaderboardEntry.create({
     data: {
-      playerName,
+      playerName: playerName.trim(),
       score,
       mode: mode as GameMode,
-      category,
-      sessionId,
+      category: mode === 'FIXED_10' ? normalizedCategory : null,
+      sessionId: typeof sessionId === 'string' && sessionId ? sessionId : null,
     },
   });
 
