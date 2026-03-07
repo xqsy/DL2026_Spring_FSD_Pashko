@@ -83,10 +83,10 @@
       </div>
     </div>
 
-    <h1 class="text-5xl sm:text-6xl font-black tracking-tight mb-3">
-      <span class="text-teal-400 text-glow-teal">Geo</span><span class="text-white">Hoot</span>
+    <h1 class="text-5xl sm:text-6xl font-black tracking-tight mb-3 theme-heading">
+      <span class="text-teal-400 text-glow-teal">Geo</span><span>Hoot</span>
     </h1>
-    <p class="text-lg text-slate-400 max-w-md mx-auto leading-relaxed">
+    <p class="text-lg theme-muted max-w-md mx-auto leading-relaxed">
       Проверь свои знания географии! Найди города, достопримечательности и страны на карте мира.
     </p>
   </div>
@@ -97,30 +97,30 @@
     
     <!-- Mode Selection -->
     <div class="mb-6">
-      <div class="block text-sm font-semibold text-slate-400 mb-3 uppercase tracking-wider">Режим игры</div>
+      <div class="block text-sm font-semibold theme-muted mb-3 uppercase tracking-wider">Режим игры</div>
       <div class="grid grid-cols-2 gap-3">
         <button
-          class="p-4 rounded-xl border transition-all duration-300 text-left {selectedMode === 'FIXED_10' ? 'border-teal-500/50 bg-teal-500/10 glow-teal' : 'border-white/10 bg-white/5 hover:border-white/20 hover:bg-white/8'}"
+          class="p-4 rounded-xl border transition-all duration-300 text-left {selectedMode === 'FIXED_10' ? 'border-teal-500/50 bg-teal-500/10 glow-teal' : 'theme-inline-surface hover:border-teal-500/20'}"
           onclick={() => selectedMode = 'FIXED_10'}
         >
           <div class="text-2xl mb-1">🎯</div>
-          <div class="font-bold text-sm {selectedMode === 'FIXED_10' ? 'text-teal-300' : 'text-slate-300'}">10 вопросов</div>
-          <div class="text-xs mt-0.5 {selectedMode === 'FIXED_10' ? 'text-teal-400/70' : 'text-slate-500'}">Классический</div>
+          <div class="font-bold text-sm {selectedMode === 'FIXED_10' ? 'text-teal-300' : 'theme-text'}">10 вопросов</div>
+          <div class="text-xs mt-0.5 {selectedMode === 'FIXED_10' ? 'text-teal-400/70' : 'theme-soft'}">Классический</div>
         </button>
         <button
-          class="p-4 rounded-xl border transition-all duration-300 text-left {selectedMode === 'ENDLESS' ? 'border-teal-500/50 bg-teal-500/10 glow-teal' : 'border-white/10 bg-white/5 hover:border-white/20 hover:bg-white/8'}"
+          class="p-4 rounded-xl border transition-all duration-300 text-left {selectedMode === 'ENDLESS' ? 'border-teal-500/50 bg-teal-500/10 glow-teal' : 'theme-inline-surface hover:border-teal-500/20'}"
           onclick={() => selectedMode = 'ENDLESS'}
         >
           <div class="text-2xl mb-1">♾️</div>
-          <div class="font-bold text-sm {selectedMode === 'ENDLESS' ? 'text-teal-300' : 'text-slate-300'}">Бесконечный</div>
-          <div class="text-xs mt-0.5 {selectedMode === 'ENDLESS' ? 'text-teal-400/70' : 'text-slate-500'}">Без лимита</div>
+          <div class="font-bold text-sm {selectedMode === 'ENDLESS' ? 'text-teal-300' : 'theme-text'}">Бесконечный</div>
+          <div class="text-xs mt-0.5 {selectedMode === 'ENDLESS' ? 'text-teal-400/70' : 'theme-soft'}">Без лимита</div>
         </button>
       </div>
     </div>
 
     <!-- Category Selection -->
     <div class="mb-8">
-      <label for="game-category" class="block text-sm font-semibold text-slate-400 mb-3 uppercase tracking-wider">Категория</label>
+      <label for="game-category" class="block text-sm font-semibold theme-muted mb-3 uppercase tracking-wider">Категория</label>
       <select
         id="game-category"
         bind:value={selectedCategory}

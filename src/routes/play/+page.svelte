@@ -166,7 +166,7 @@
   <div class="flex items-center justify-center h-screen">
     <div class="text-center">
       <div class="w-12 h-12 mx-auto mb-4 border-3 border-teal-500/30 border-t-teal-400 rounded-full animate-spin"></div>
-      <div class="text-lg text-slate-400 font-medium">Загрузка вопроса...</div>
+      <div class="text-lg theme-muted font-medium">Загрузка вопроса...</div>
     </div>
   </div>
 {:else if gameState.currentQuestion}
@@ -176,15 +176,15 @@
       <div class="flex items-center gap-4">
         <button
           onclick={handleExit}
-          class="flex items-center gap-2 px-3 py-2 glass rounded-lg hover:bg-white/10 transition-colors text-slate-400 hover:text-white"
+          class="flex items-center gap-2 px-3 py-2 glass rounded-lg hover:bg-white/10 transition-colors theme-muted hover:theme-heading"
         >
           <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
             <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
           </svg>
           <span class="text-sm font-medium">Выход</span>
         </button>
-        <span class="text-xl font-black tracking-tight">
-          <span class="text-teal-400">Geo</span><span class="text-white">Hoot</span>
+        <span class="text-xl font-black tracking-tight theme-heading">
+          <span class="text-teal-400">Geo</span><span>Hoot</span>
         </span>
       </div>
       <div class="flex items-center gap-3">
@@ -225,7 +225,7 @@
     {/if}
 
     <!-- Map -->
-    <div class="relative h-[50vh] mb-4 rounded-xl overflow-hidden border border-white/10 glow-teal">
+    <div class="relative h-[50vh] mb-4 rounded-xl overflow-hidden border theme-border glow-teal">
       <GameMap
         onMapClick={handleMapClick}
         clickedMarker={clickedPosition}
@@ -266,7 +266,7 @@
   </div>
 
   {#if showResult && gameState.lastAnswer}
-    <div class="fixed bottom-0 left-0 right-0 z-[1200] p-4 bg-gradient-to-t from-navy-950 via-navy-950 to-navy-950/0">
+    <div class="fixed bottom-0 left-0 right-0 z-[1200] p-4 theme-bottom-fade">
       <div class="container mx-auto max-w-6xl px-4">
         <button
           onclick={nextQuestion}
@@ -281,13 +281,13 @@
 
 <!-- Exit Modal -->
 {#if showExitModal}
-  <div class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-[2000] px-4">
+  <div class="fixed inset-0 theme-overlay backdrop-blur-sm flex items-center justify-center z-[2000] px-4">
     <div class="glass rounded-2xl p-6 w-full max-w-sm text-center glow-teal animate-slide-up">
       <div class="w-14 h-14 mx-auto mb-4 rounded-full bg-amber-500/15 flex items-center justify-center border border-amber-500/20">
         <svg class="w-7 h-7 text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
       </div>
-      <h2 class="text-xl font-bold text-white mb-2">Выйти из игры?</h2>
-      <p class="text-slate-400 mb-5 text-sm">
+      <h2 class="text-xl font-bold theme-heading mb-2">Выйти из игры?</h2>
+      <p class="theme-muted mb-5 text-sm">
         У вас <span class="text-amber-300 font-bold">{gameState.score}</span> очков. Сохранить результат?
       </p>
       <div class="flex flex-col gap-3">
@@ -305,7 +305,7 @@
         </button>
         <button
           onclick={() => showExitModal = false}
-          class="w-full py-2 text-slate-500 hover:text-slate-300 transition-colors text-sm"
+          class="w-full py-2 theme-soft hover:text-teal-300 transition-colors text-sm"
         >
           Продолжить игру
         </button>

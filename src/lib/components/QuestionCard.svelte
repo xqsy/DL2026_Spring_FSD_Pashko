@@ -31,7 +31,7 @@
       </span>
     {/if}
   </div>
-  <h2 class="text-2xl font-bold text-white leading-snug">
+  <h2 class="text-2xl font-bold theme-heading leading-snug">
     {text}
   </h2>
 </div>

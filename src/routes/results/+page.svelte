@@ -69,15 +69,15 @@
       <div class="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-teal-500/20 to-emerald-500/20 border border-teal-500/30 flex items-center justify-center">
         <span class="text-4xl">🎉</span>
       </div>
-      <h1 class="text-3xl font-black text-white mb-2">Игра окончена!</h1>
-      <p class="text-slate-400 text-sm">{getScoreMessage(gameState.score)}</p>
+      <h1 class="text-3xl font-black theme-heading mb-2">Игра окончена!</h1>
+      <p class="theme-muted text-sm">{getScoreMessage(gameState.score)}</p>
     </div>
 
     <!-- Stats -->
     <div class="bg-gradient-to-br from-teal-500/15 to-emerald-500/10 rounded-xl p-6 mb-6 border border-teal-500/20">
       <div class="text-5xl font-black text-teal-300 text-glow-teal mb-1">{gameState.score}</div>
       <div class="text-teal-400/60 text-sm font-semibold uppercase tracking-wider">очков</div>
-      <div class="mt-4 text-xs text-slate-500">
+      <div class="mt-4 text-xs theme-soft">
         {#if gameState.mode === 'FIXED_10'}
           {gameState.questionNumber} вопросов • Режим: 10 вопросов
         {:else}
@@ -89,7 +89,7 @@
     <!-- Submit to leaderboard -->
     {#if !submitted}
       <div class="mb-6 text-left">
-        <label for="playerName" class="block text-sm font-semibold text-slate-400 mb-2 uppercase tracking-wider">
+        <label for="playerName" class="block text-sm font-semibold theme-muted mb-2 uppercase tracking-wider">
           Ваше имя для таблицы лидеров
         </label>
         <input

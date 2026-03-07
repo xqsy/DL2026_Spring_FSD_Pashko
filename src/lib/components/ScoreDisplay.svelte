@@ -75,10 +75,10 @@
   <div class="text-5xl font-black {getScoreColor(points)} mb-2">
     +{displayPoints}
   </div>
-  <div class="text-slate-400">
-    Расстояние: <span class="text-slate-300 font-semibold">{distanceKm.toFixed(1)} км</span>
+  <div class="theme-muted">
+    Расстояние: <span class="theme-text font-semibold">{distanceKm.toFixed(1)} км</span>
   </div>
-  <div class="mt-2 text-sm text-slate-500">
+  <div class="mt-2 text-sm theme-soft">
     Максимум: {maxPoints} очков
   </div>
 </div>
