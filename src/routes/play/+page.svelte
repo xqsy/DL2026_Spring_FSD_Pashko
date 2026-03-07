@@ -80,9 +80,10 @@
       showResult = true;
 
       if (gameState.currentQuestion.category === 'COUNTRY') {
-        const name = extractCountryName(gameState.currentQuestion.text);
-        if (name) {
-          const borderRes = await fetch(`/api/countries/border?name=${encodeURIComponent(name)}`);
+        const lat = gameState.lastAnswer?.correctLat;
+        const lng = gameState.lastAnswer?.correctLng;
+        if (typeof lat === 'number' && typeof lng === 'number') {
+          const borderRes = await fetch(`/api/countries/border?lat=${encodeURIComponent(String(lat))}&lng=${encodeURIComponent(String(lng))}`);
           if (borderRes.ok) {
             const borderJson = await borderRes.json();
             countryBorder = borderJson?.feature ?? null;
@@ -130,12 +131,6 @@
       clickedPosition = { lat, lng };
     }
   };
-
-  // Extract country name from question text (e.g., "Где находится Франция?" -> "Франция")
-  function extractCountryName(text: string): string | null {
-    const match = text.match(/Где находится ([^?]+)\?/);
-    return match ? match[1] : null;
-  }
 
   const isLastQuestion = $derived(gameState.questionNumber >= gameState.totalQuestions);
 

@@ -2,6 +2,9 @@ const RESTCOUNTRIES_TRANSLATION_URL = 'https://restcountries.com/v3.1/translatio
 const RESTCOUNTRIES_NAME_URL = 'https://restcountries.com/v3.1/name/';
 const WORLD_GEOJSON_URL = 'https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson';
 
+import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
+import { point } from '@turf/helpers';
+
 let countriesGeoJsonPromise: Promise<GeoJSON.FeatureCollection> | null = null;
 const borderByCca3 = new Map<string, GeoJSON.Feature>();
 const cca3ByQuery = new Map<string, string>();
@@ -57,4 +60,21 @@ export async function getCountryBorderFeatureByName(countryName: string): Promis
   if (!feature) return null;
   borderByCca3.set(cca3, feature);
   return feature;
+}
+
+export async function getCountryBorderFeatureByPoint(lat: number, lng: number): Promise<GeoJSON.Feature | null> {
+  if (!Number.isFinite(lat) || !Number.isFinite(lng)) return null;
+
+  const fc = await loadCountriesDataset();
+  const pt = point([lng, lat]);
+
+  const feature = (fc.features as GeoJSON.Feature[]).find((f) => {
+    try {
+      return booleanPointInPolygon(pt as any, f as any);
+    } catch {
+      return false;
+    }
+  });
+
+  return feature ?? null;
 }
