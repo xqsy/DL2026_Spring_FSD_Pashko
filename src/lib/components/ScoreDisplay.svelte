@@ -11,7 +11,6 @@
   let { points, distanceKm, maxPoints = 1000, showAnimation = true }: Props = $props();
 
   let displayPoints = $state(0);
-  let hasAnimated = $state(false);
   let rafId: number | null = null;
 
   onDestroy(() => {
@@ -27,8 +26,6 @@
       rafId = null;
     }
 
-    hasAnimated = false;
-
     if (animateEnabled) {
       const duration = 1000;
       const start = performance.now();
@@ -39,7 +36,6 @@
           rafId = requestAnimationFrame(animate);
         } else {
           displayPoints = pts;
-          hasAnimated = true;
           rafId = null;
         }
       };

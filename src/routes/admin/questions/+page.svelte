@@ -257,12 +257,6 @@
     if (mode !== 'EDIT') return;
     syncDraftFromSelected();
   });
-
-  $effect(() => {
-    if (mode !== 'EDIT') return;
-    if (!selectedId) return;
-    if (!questions.some((x) => x.id === selectedId)) return;
-  });
 </script>
 
 <svelte:head>
