@@ -72,8 +72,28 @@
   --theme-selection-text: #102534;
   --theme-shadow-soft: 0 12px 32px rgba(15, 23, 42, 0.08);
   --theme-page-gradient: radial-gradient(circle at top left, rgba(20, 184, 166, 0.1), transparent 35%), radial-gradient(circle at bottom right, rgba(245, 158, 11, 0.08), transparent 35%);
-  --theme-accent-strong: #0f766e;
-  --theme-accent-muted: rgba(15, 118, 110, 0.72);
+  --theme-accent-strong: #0b5c56;
+  --theme-accent-muted: rgba(11, 92, 86, 0.88);
+}
+
+:root[data-theme='light'] .text-teal-300,
+:root[data-theme='light'] .text-teal-400 {
+  color: #0b5c56 !important;
+}
+
+:root[data-theme='light'] .text-glow-teal {
+  text-shadow: none;
+}
+
+:root[data-theme='light'] .glass-teal {
+  background: rgba(20, 184, 166, 0.14);
+  border-color: rgba(11, 92, 86, 0.18);
+}
+
+:root[data-theme='light'] .badge-teal {
+  background: rgba(20, 184, 166, 0.12);
+  color: #0b5c56;
+  border-color: rgba(11, 92, 86, 0.2);
 }
 
 /* ===== Base styles ===== */
