@@ -137,23 +137,23 @@
 
 <div class="container mx-auto px-4 py-8 max-w-6xl">
   <div class="flex items-center justify-between mb-6">
-    <h1 class="text-3xl font-bold text-gray-800">🛠️ Предложения вопросов</h1>
+    <h1 class="text-3xl font-black text-white">Предложения вопросов</h1>
     <div class="flex gap-2">
       <button
         onclick={() => goto('/admin/questions')}
-        class="px-4 py-2 bg-indigo-100 text-indigo-700 rounded-lg hover:bg-indigo-200 transition-colors"
+        class="btn-secondary text-sm py-2 px-4"
       >
-        🧩 Вопросы
+        Вопросы
       </button>
       <button
         onclick={() => goto('/')}
-        class="px-4 py-2 bg-indigo-100 text-indigo-700 rounded-lg hover:bg-indigo-200 transition-colors"
+        class="btn-secondary text-sm py-2 px-4"
       >
         ← На главную
       </button>
       <button
         onclick={logout}
-        class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+        class="btn-secondary text-sm py-2 px-4 !text-red-400 !border-red-500/20"
       >
         Выйти
       </button>
@@ -163,48 +163,48 @@
   <div class="mb-6 flex gap-2">
     <button
       onclick={() => (selectedStatus = 'PENDING')}
-      class="px-4 py-2 rounded-lg transition-colors {selectedStatus === 'PENDING' ? 'bg-indigo-500 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}"
+      class="px-4 py-2 rounded-lg text-sm font-semibold transition-all {selectedStatus === 'PENDING' ? 'bg-teal-500/15 text-teal-300 border border-teal-500/30' : 'bg-white/5 text-slate-400 border border-white/10 hover:bg-white/10'}"
     >
       Pending
     </button>
     <button
       onclick={() => (selectedStatus = 'APPROVED')}
-      class="px-4 py-2 rounded-lg transition-colors {selectedStatus === 'APPROVED' ? 'bg-indigo-500 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}"
+      class="px-4 py-2 rounded-lg text-sm font-semibold transition-all {selectedStatus === 'APPROVED' ? 'bg-teal-500/15 text-teal-300 border border-teal-500/30' : 'bg-white/5 text-slate-400 border border-white/10 hover:bg-white/10'}"
     >
       Approved
     </button>
     <button
       onclick={() => (selectedStatus = 'REJECTED')}
-      class="px-4 py-2 rounded-lg transition-colors {selectedStatus === 'REJECTED' ? 'bg-indigo-500 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}"
+      class="px-4 py-2 rounded-lg text-sm font-semibold transition-all {selectedStatus === 'REJECTED' ? 'bg-teal-500/15 text-teal-300 border border-teal-500/30' : 'bg-white/5 text-slate-400 border border-white/10 hover:bg-white/10'}"
     >
       Rejected
     </button>
   </div>
 
   {#if errorMessage}
-    <div class="mb-4 p-3 bg-red-50 text-red-700 rounded-xl">{errorMessage}</div>
+    <div class="mb-4 p-3 bg-red-500/10 text-red-400 rounded-xl border border-red-500/20 text-sm">{errorMessage}</div>
   {/if}
 
   {#if successMessage}
-    <div class="mb-4 p-3 bg-green-50 text-green-700 rounded-xl">{successMessage}</div>
+    <div class="mb-4 p-3 glass-teal text-teal-300 rounded-xl text-sm">{successMessage}</div>
   {/if}
 
   {#if isLoading}
-    <div class="text-center py-12 text-gray-500">Загрузка...</div>
+    <div class="text-center py-12 text-slate-500">Загрузка...</div>
   {:else}
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
-        <div class="px-4 py-3 bg-gray-50 text-sm text-gray-600">
+      <div class="glass rounded-2xl overflow-hidden">
+        <div class="px-4 py-3 border-b border-white/5 text-sm text-slate-500">
           Всего: {suggestions.length}
         </div>
-        <div class="divide-y divide-gray-100 max-h-[70vh] overflow-auto">
+        <div class="divide-y divide-white/5 max-h-[70vh] overflow-auto">
           {#each suggestions as s (s.id)}
             <button
-              class="w-full text-left px-4 py-3 hover:bg-gray-50 transition-colors {selectedId === s.id ? 'bg-indigo-50' : ''}"
+              class="w-full text-left px-4 py-3 hover:bg-white/5 transition-colors {selectedId === s.id ? 'bg-teal-500/10 border-l-2 border-l-teal-400' : ''}"
               onclick={() => (selectedId = s.id)}
             >
-              <div class="font-medium text-gray-800 line-clamp-2">{s.questionText}</div>
-              <div class="text-xs text-gray-500 mt-1">
+              <div class="font-medium text-slate-200 line-clamp-2">{s.questionText}</div>
+              <div class="text-xs text-slate-500 mt-1">
                 {new Date(s.createdAt).toLocaleString('ru-RU')}
               </div>
             </button>
@@ -214,28 +214,28 @@
 
       <div class="lg:col-span-2">
         {#if !selected}
-          <div class="bg-white rounded-2xl shadow-xl p-6 text-gray-600">
+          <div class="glass rounded-2xl p-6 text-slate-500">
             Выберите предложение слева
           </div>
         {:else}
-          <div class="bg-white rounded-2xl shadow-xl p-6">
+          <div class="glass rounded-2xl p-6">
             <div class="flex items-start justify-between gap-4">
               <div>
-                <div class="text-lg font-bold text-gray-800">{selected.questionText}</div>
-                <div class="text-sm text-gray-600 mt-1">
+                <div class="text-lg font-bold text-white">{selected.questionText}</div>
+                <div class="text-sm text-slate-400 mt-1">
                   {selected.country ? `Страна: ${selected.country}` : ''}
                   {selected.city ? ` Город: ${selected.city}` : ''}
                 </div>
-                <div class="text-sm text-gray-500 mt-2">
+                <div class="text-sm text-slate-500 mt-2">
                   {selected.lat.toFixed(5)}, {selected.lng.toFixed(5)}
                 </div>
                 {#if selected.createdQuestionId}
-                  <div class="text-sm text-green-700 mt-2">
+                  <div class="text-sm text-emerald-400 mt-2">
                     Добавлено в пул вопросов: {selected.createdQuestionId}
                   </div>
                 {/if}
               </div>
-              <div class="text-sm text-gray-500">{selected.status}</div>
+              <span class="badge-teal">{selected.status}</span>
             </div>
 
             <div class="mt-4 h-[360px] rounded-xl overflow-hidden">
@@ -251,22 +251,22 @@
             </div>
 
             <div class="mt-4">
-              <label for="admin-note" class="block text-sm font-medium text-gray-700 mb-2">Admin note</label>
+              <label for="admin-note" class="block text-sm font-semibold text-slate-400 mb-2 uppercase tracking-wider">Admin note</label>
               <textarea
                 id="admin-note"
                 bind:value={adminNote}
                 rows={3}
-                class="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                class="w-full input-dark resize-none"
               ></textarea>
             </div>
 
             <div class="mt-4">
-              <label for="approve-category" class="block text-sm font-medium text-gray-700 mb-2">Категория при добавлении</label>
+              <label for="approve-category" class="block text-sm font-semibold text-slate-400 mb-2 uppercase tracking-wider">Категория при добавлении</label>
               <select
                 id="approve-category"
                 bind:value={approveCategory}
                 disabled={selected.status !== 'PENDING'}
-                class="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent disabled:opacity-50"
+                class="w-full input-dark disabled:opacity-50"
               >
                 <option value="CAPITAL">Столица</option>
                 <option value="LANDMARK">Достопримечательность</option>
@@ -279,16 +279,16 @@
               <button
                 onclick={() => act('APPROVE')}
                 disabled={isActing || selected.status !== 'PENDING'}
-                class="flex-1 py-3 bg-gradient-to-r from-green-500 to-emerald-500 text-white font-bold rounded-xl hover:from-green-600 hover:to-emerald-600 transition-all disabled:opacity-50"
+                class="flex-1 py-3 btn-success"
               >
-                ✅ Approve
+                Approve
               </button>
               <button
                 onclick={() => act('REJECT')}
                 disabled={isActing || selected.status !== 'PENDING'}
-                class="flex-1 py-3 bg-gradient-to-r from-red-500 to-rose-500 text-white font-bold rounded-xl hover:from-red-600 hover:to-rose-600 transition-all disabled:opacity-50"
+                class="flex-1 py-3 rounded-xl font-bold text-white bg-gradient-to-r from-red-600 to-red-500 border border-red-500/30 hover:shadow-[0_0_24px_rgba(239,68,68,0.3)] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                ❌ Reject
+                Reject
               </button>
             </div>
           </div>

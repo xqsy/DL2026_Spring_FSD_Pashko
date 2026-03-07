@@ -60,23 +60,28 @@
 </svelte:head>
 
 <div class="container mx-auto px-4 py-8 max-w-4xl">
-  <div class="flex items-center justify-between mb-6">
-    <h1 class="text-3xl font-bold text-gray-800">✍️ Предложить вопрос</h1>
+  <div class="flex items-center justify-between mb-8">
+    <h1 class="text-3xl font-black text-white flex items-center gap-3">
+      <svg class="w-6 h-6 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+      Предложить вопрос
+    </h1>
     <button
       onclick={() => goto('/')}
-      class="px-4 py-2 bg-indigo-100 text-indigo-700 rounded-lg hover:bg-indigo-200 transition-colors"
+      class="btn-secondary text-sm py-2 px-4"
     >
       ← На главную
     </button>
   </div>
 
   {#if submittedId}
-    <div class="bg-white rounded-2xl shadow-xl p-6">
-      <div class="text-4xl mb-2">✅</div>
-      <div class="text-lg font-bold text-gray-800">Спасибо!</div>
-      <div class="text-gray-600 mt-2">Предложение отправлено на модерацию.</div>
-      <div class="text-sm text-gray-400 mt-2">ID: {submittedId}</div>
-      <div class="mt-6 flex gap-3">
+    <div class="glass rounded-2xl p-8 glow-emerald animate-slide-up">
+      <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-emerald-500/15 border border-emerald-500/20 flex items-center justify-center">
+        <svg class="w-8 h-8 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+      </div>
+      <div class="text-lg font-bold text-white text-center">Спасибо!</div>
+      <div class="text-slate-400 mt-2 text-center text-sm">Предложение отправлено на модерацию.</div>
+      <div class="text-xs text-slate-600 mt-2 text-center font-mono">ID: {submittedId}</div>
+      <div class="mt-6 flex gap-3 justify-center">
         <button
           onclick={() => {
             submittedId = null;
@@ -85,13 +90,13 @@
             city = '';
             picked = null;
           }}
-          class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+          class="btn-secondary text-sm"
         >
           Отправить ещё
         </button>
         <button
           onclick={() => goto('/')}
-          class="px-4 py-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 transition-colors"
+          class="btn-primary text-sm"
         >
           В меню
         </button>
@@ -99,60 +104,63 @@
     </div>
   {:else}
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      <div class="bg-white rounded-2xl shadow-xl p-6">
-        <label for="suggest-question-text" class="block text-sm font-medium text-gray-700 mb-2">Текст вопроса</label>
+      <div class="glass rounded-2xl p-6">
+        <label for="suggest-question-text" class="block text-sm font-semibold text-slate-400 mb-2 uppercase tracking-wider">Текст вопроса</label>
         <textarea
           id="suggest-question-text"
           bind:value={questionText}
           rows={4}
-          class="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+          class="w-full input-dark resize-none"
           placeholder="Например: Где находится Рига?"
         ></textarea>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
           <div>
-            <label for="suggest-country" class="block text-sm font-medium text-gray-700 mb-2">Страна (опционально)</label>
+            <label for="suggest-country" class="block text-sm font-semibold text-slate-400 mb-2 uppercase tracking-wider">Страна <span class="text-slate-600 normal-case">(опц.)</span></label>
             <input
               id="suggest-country"
               bind:value={country}
-              class="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              class="w-full input-dark"
               placeholder="Латвия"
             />
           </div>
           <div>
-            <label for="suggest-city" class="block text-sm font-medium text-gray-700 mb-2">Город (опционально)</label>
+            <label for="suggest-city" class="block text-sm font-semibold text-slate-400 mb-2 uppercase tracking-wider">Город <span class="text-slate-600 normal-case">(опц.)</span></label>
             <input
               id="suggest-city"
               bind:value={city}
-              class="w-full p-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              class="w-full input-dark"
               placeholder="Рига"
             />
           </div>
         </div>
 
-        <div class="mt-4 text-sm text-gray-600">
+        <div class="mt-4 text-sm">
           {#if picked}
-            Выбрано: {picked.lat.toFixed(5)}, {picked.lng.toFixed(5)}
+            <span class="text-teal-300 flex items-center gap-2">
+              <div class="w-2 h-2 bg-teal-400 rounded-full animate-pulse"></div>
+              {picked.lat.toFixed(5)}, {picked.lng.toFixed(5)}
+            </span>
           {:else}
-            Выберите точку на карте справа
+            <span class="text-slate-500">Выберите точку на карте →</span>
           {/if}
         </div>
 
         {#if errorMessage}
-          <div class="mt-4 p-3 bg-red-50 text-red-700 rounded-xl">{errorMessage}</div>
+          <div class="mt-4 p-3 bg-red-500/10 text-red-400 rounded-xl border border-red-500/20 text-sm">{errorMessage}</div>
         {/if}
 
         <button
           onclick={submit}
           disabled={isSubmitting}
-          class="mt-6 w-full py-3 bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-bold rounded-xl hover:from-indigo-600 hover:to-purple-600 transition-all disabled:opacity-50"
+          class="mt-6 w-full py-3 btn-primary"
         >
           {isSubmitting ? 'Отправка...' : 'Отправить на модерацию'}
         </button>
       </div>
 
-      <div class="bg-white rounded-2xl shadow-xl p-4">
-        <div class="h-[420px] rounded-xl overflow-hidden">
+      <div class="glass rounded-2xl p-4">
+        <div class="h-[420px] rounded-xl overflow-hidden border border-white/10">
           <GameMap
             onMapClick={onMapClick}
             clickedMarker={picked}
@@ -163,7 +171,7 @@
             hideLabels={false}
           />
         </div>
-        <div class="text-xs text-gray-500 mt-3">
+        <div class="text-xs text-slate-500 mt-3">
           Кликни по карте, чтобы поставить точку.
         </div>
       </div>

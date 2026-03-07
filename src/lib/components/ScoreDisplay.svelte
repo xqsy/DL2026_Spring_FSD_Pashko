@@ -50,10 +50,10 @@
   });
 
   const getScoreColor = (pts: number) => {
-    if (pts >= 900) return 'text-green-600';
-    if (pts >= 700) return 'text-yellow-600';
-    if (pts >= 400) return 'text-orange-600';
-    return 'text-red-600';
+    if (pts >= 900) return 'text-emerald-400 text-glow-teal';
+    if (pts >= 700) return 'text-amber-400 text-glow-amber';
+    if (pts >= 400) return 'text-orange-400';
+    return 'text-red-400';
   };
 
   const getScoreEmoji = (pts: number) => {
@@ -62,17 +62,23 @@
     if (pts >= 400) return '🤔';
     return '😅';
   };
+
+  const getGlowClass = (pts: number) => {
+    if (pts >= 900) return 'glow-emerald';
+    if (pts >= 700) return 'glow-amber';
+    return '';
+  };
 </script>
 
-<div class="bg-white rounded-xl shadow-lg p-6 text-center">
-  <div class="text-4xl mb-2">{getScoreEmoji(points)}</div>
-  <div class="text-5xl font-bold {getScoreColor(points)} mb-2">
+<div class="glass rounded-xl p-6 text-center {getGlowClass(points)}">
+  <div class="text-4xl mb-2 animate-count-up">{getScoreEmoji(points)}</div>
+  <div class="text-5xl font-black {getScoreColor(points)} mb-2">
     +{displayPoints}
   </div>
-  <div class="text-gray-500">
-    Расстояние: {distanceKm.toFixed(1)} км
+  <div class="text-slate-400">
+    Расстояние: <span class="text-slate-300 font-semibold">{distanceKm.toFixed(1)} км</span>
   </div>
-  <div class="mt-2 text-sm text-gray-400">
+  <div class="mt-2 text-sm text-slate-500">
     Максимум: {maxPoints} очков
   </div>
 </div>

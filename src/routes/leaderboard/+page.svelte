@@ -44,11 +44,14 @@
 
 <div class="container mx-auto px-4 py-8 max-w-2xl">
   <!-- Header -->
-  <div class="flex items-center justify-between mb-6">
-    <h1 class="text-3xl font-bold text-gray-800">🏆 Таблица лидеров</h1>
+  <div class="flex items-center justify-between mb-8">
+    <h1 class="text-3xl font-black text-white flex items-center gap-3">
+      <svg class="w-7 h-7 text-amber-400" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      Таблица лидеров
+    </h1>
     <button
       onclick={() => goto('/')}
-      class="px-4 py-2 bg-indigo-100 text-indigo-700 rounded-lg hover:bg-indigo-200 transition-colors"
+      class="btn-secondary text-sm py-2 px-4"
     >
       ← На главную
     </button>
@@ -59,19 +62,19 @@
     <div class="flex gap-2">
       <button
         onclick={() => selectedMode = ''}
-        class="px-4 py-2 rounded-lg transition-colors {selectedMode === '' ? 'bg-indigo-500 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}"
+        class="px-4 py-2 rounded-lg text-sm font-semibold transition-all {selectedMode === '' ? 'bg-teal-500/15 text-teal-300 border border-teal-500/30' : 'bg-white/5 text-slate-400 border border-white/10 hover:bg-white/10'}"
       >
         Все режимы
       </button>
       <button
         onclick={() => selectedMode = 'FIXED_10'}
-        class="px-4 py-2 rounded-lg transition-colors {selectedMode === 'FIXED_10' ? 'bg-indigo-500 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}"
+        class="px-4 py-2 rounded-lg text-sm font-semibold transition-all {selectedMode === 'FIXED_10' ? 'bg-teal-500/15 text-teal-300 border border-teal-500/30' : 'bg-white/5 text-slate-400 border border-white/10 hover:bg-white/10'}"
       >
         10 вопросов
       </button>
       <button
         onclick={() => selectedMode = 'ENDLESS'}
-        class="px-4 py-2 rounded-lg transition-colors {selectedMode === 'ENDLESS' ? 'bg-indigo-500 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}"
+        class="px-4 py-2 rounded-lg text-sm font-semibold transition-all {selectedMode === 'ENDLESS' ? 'bg-teal-500/15 text-teal-300 border border-teal-500/30' : 'bg-white/5 text-slate-400 border border-white/10 hover:bg-white/10'}"
       >
         Бесконечный
       </button>
@@ -80,11 +83,12 @@
 
   <!-- Leaderboard -->
   {#if isLoading}
-    <div class="text-center py-12 text-gray-500">
-      Загрузка...
+    <div class="text-center py-12">
+      <div class="w-10 h-10 mx-auto mb-3 border-3 border-teal-500/30 border-t-teal-400 rounded-full animate-spin"></div>
+      <div class="text-slate-500">Загрузка...</div>
     </div>
   {:else if errorMessage}
-    <div class="text-center py-12 text-gray-500">
+    <div class="text-center py-12 text-slate-500">
       {errorMessage}
     </div>
   {:else}

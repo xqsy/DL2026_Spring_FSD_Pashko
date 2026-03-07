@@ -154,6 +154,8 @@
       goto('/');
     }
   }
+
+  const isCountryQuestion = $derived(gameState.currentQuestion?.category === 'COUNTRY');
 </script>
 
 <svelte:head>
@@ -161,29 +163,34 @@
 </svelte:head>
 
 {#if isLoading}
-  <div class="flex items-center justify-center h-[80vh]">
-    <div class="text-xl text-gray-600">Загрузка вопроса...</div>
+  <div class="flex items-center justify-center h-screen">
+    <div class="text-center">
+      <div class="w-12 h-12 mx-auto mb-4 border-3 border-teal-500/30 border-t-teal-400 rounded-full animate-spin"></div>
+      <div class="text-lg text-slate-400 font-medium">Загрузка вопроса...</div>
+    </div>
   </div>
 {:else if gameState.currentQuestion}
-  <div class="container mx-auto px-4 py-6 max-w-6xl pb-28">
+  <div class="container mx-auto px-4 py-4 max-w-6xl pb-28">
     <!-- Header -->
     <div class="flex items-center justify-between mb-4">
       <div class="flex items-center gap-4">
         <button
           onclick={handleExit}
-          class="flex items-center gap-2 px-3 py-2 bg-white rounded-lg shadow hover:bg-gray-50 transition-colors text-gray-600 hover:text-gray-800"
+          class="flex items-center gap-2 px-3 py-2 glass rounded-lg hover:bg-white/10 transition-colors text-slate-400 hover:text-white"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
             <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
           </svg>
           <span class="text-sm font-medium">Выход</span>
         </button>
-        <span class="text-2xl font-bold text-indigo-600">🌍 GeoHoot</span>
+        <span class="text-xl font-black tracking-tight">
+          <span class="text-teal-400">Geo</span><span class="text-white">Hoot</span>
+        </span>
       </div>
-      <div class="flex items-center gap-4">
-        <div class="bg-white px-4 py-2 rounded-lg shadow">
-          <span class="text-gray-500">Очки:</span>
-          <span class="font-bold text-indigo-600 ml-1">{gameState.score}</span>
+      <div class="flex items-center gap-3">
+        <div class="glass px-4 py-2 rounded-lg flex items-center gap-2">
+          <svg class="w-4 h-4 text-amber-400" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <span class="font-bold text-amber-300 text-glow-amber">{gameState.score}</span>
         </div>
       </div>
     </div>
@@ -207,39 +214,41 @@
     {#if !showResult && gameState.currentQuestion.hint && !gameState.usedHint}
       <button
         onclick={useHint}
-        class="mb-4 px-4 py-2 bg-yellow-100 text-yellow-700 rounded-lg hover:bg-yellow-200 transition-colors"
+        class="mb-4 px-4 py-2 bg-amber-500/10 text-amber-300 rounded-lg hover:bg-amber-500/20 transition-colors border border-amber-500/20 text-sm font-semibold"
       >
         💡 Подсказка (-100 очков)
       </button>
     {:else if gameState.usedHint && gameState.currentQuestion.hint}
-      <div class="mb-4 px-4 py-2 bg-yellow-50 text-yellow-700 rounded-lg">
+      <div class="mb-4 px-4 py-3 glass-teal rounded-lg text-teal-300 text-sm">
         💡 {gameState.currentQuestion.hint}
       </div>
     {/if}
 
     <!-- Map -->
-    <div class="relative h-[50vh] mb-4 rounded-xl overflow-hidden shadow-lg">
+    <div class="relative h-[50vh] mb-4 rounded-xl overflow-hidden border border-white/10 glow-teal">
       <GameMap
         onMapClick={handleMapClick}
         clickedMarker={clickedPosition}
         correctMarker={showResult && gameState.lastAnswer ? { lat: gameState.lastAnswer.correctLat, lng: gameState.lastAnswer.correctLng } : null}
-        showLine={showResult}
+        showLine={showResult && !isCountryQuestion}
+        showCorrectMarker={!isCountryQuestion}
         disabled={showResult}
         countryBorder={showResult ? countryBorder : null}
-        hideLabels={gameState.currentQuestion?.category === 'COUNTRY'}
+        hideLabels={isCountryQuestion}
       />
       
       <!-- Click indicator -->
       {#if clickedPosition && !showResult}
-        <div class="absolute top-4 left-4 bg-white px-3 py-2 rounded-lg shadow">
-          ✅ Точка выбрана
+        <div class="absolute top-4 left-4 glass px-3 py-2 rounded-lg text-sm text-teal-300 font-medium flex items-center gap-2">
+          <div class="w-2 h-2 bg-teal-400 rounded-full animate-pulse"></div>
+          Точка выбрана
         </div>
       {/if}
     </div>
 
     <!-- Result -->
     {#if showResult && gameState.lastAnswer}
-      <div class="mb-4">
+      <div class="mb-4 animate-slide-up">
         <ScoreDisplay
           points={gameState.lastAnswer.points}
           distanceKm={gameState.lastAnswer.distanceKm}
@@ -249,21 +258,21 @@
       <button
         onclick={submitAnswer}
         disabled={!clickedPosition || isSubmitting}
-        class="w-full py-4 bg-gradient-to-r from-green-500 to-emerald-500 text-white font-bold rounded-xl hover:from-green-600 hover:to-emerald-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+        class="w-full py-4 btn-success text-lg tracking-wide"
       >
-        {isSubmitting ? 'Проверка...' : '✓ Ответить'}
+        {isSubmitting ? 'Проверка...' : 'Ответить'}
       </button>
     {/if}
   </div>
 
   {#if showResult && gameState.lastAnswer}
-    <div class="fixed bottom-0 left-0 right-0 z-[1200] p-4 bg-gradient-to-t from-white via-white to-white/0">
+    <div class="fixed bottom-0 left-0 right-0 z-[1200] p-4 bg-gradient-to-t from-navy-950 via-navy-950 to-navy-950/0">
       <div class="container mx-auto max-w-6xl px-4">
         <button
           onclick={nextQuestion}
-          class="w-full py-4 bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-bold rounded-xl hover:from-indigo-600 hover:to-purple-600 transition-all shadow-lg"
+          class="w-full py-4 btn-primary text-lg tracking-wide glow-teal"
         >
-          {isLastQuestion ? '🏁 Результаты' : '➡️ Следующий вопрос'}
+          {isLastQuestion ? 'Результаты' : 'Следующий вопрос →'}
         </button>
       </div>
     </div>
@@ -272,29 +281,31 @@
 
 <!-- Exit Modal -->
 {#if showExitModal}
-  <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-[2000] px-4">
-    <div class="bg-white rounded-2xl shadow-xl p-6 w-full max-w-sm text-center">
-      <div class="text-4xl mb-3">⚠️</div>
-      <h2 class="text-xl font-bold text-gray-800 mb-2">Выйти из игры?</h2>
-      <p class="text-gray-600 mb-4">
-        У вас {gameState.score} очков. Сохранить результат в таблице лидеров?
+  <div class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-[2000] px-4">
+    <div class="glass rounded-2xl p-6 w-full max-w-sm text-center glow-teal animate-slide-up">
+      <div class="w-14 h-14 mx-auto mb-4 rounded-full bg-amber-500/15 flex items-center justify-center border border-amber-500/20">
+        <svg class="w-7 h-7 text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      </div>
+      <h2 class="text-xl font-bold text-white mb-2">Выйти из игры?</h2>
+      <p class="text-slate-400 mb-5 text-sm">
+        У вас <span class="text-amber-300 font-bold">{gameState.score}</span> очков. Сохранить результат?
       </p>
       <div class="flex flex-col gap-3">
         <button
           onclick={() => confirmExit(true)}
-          class="w-full py-3 bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-bold rounded-xl hover:from-indigo-600 hover:to-purple-600 transition-all"
+          class="w-full py-3 btn-primary"
         >
-          🏆 Сохранить результат
+          Сохранить результат
         </button>
         <button
           onclick={() => confirmExit(false)}
-          class="w-full py-3 bg-gray-100 text-gray-700 font-bold rounded-xl hover:bg-gray-200 transition-all"
+          class="w-full py-3 btn-secondary"
         >
           Выйти без сохранения
         </button>
         <button
           onclick={() => showExitModal = false}
-          class="w-full py-2 text-gray-500 hover:text-gray-700 transition-colors"
+          class="w-full py-2 text-slate-500 hover:text-slate-300 transition-colors text-sm"
         >
           Продолжить игру
         </button>
