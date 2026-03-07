@@ -75,8 +75,8 @@
 
     <!-- Stats -->
     <div class="bg-gradient-to-br from-teal-500/15 to-emerald-500/10 rounded-xl p-6 mb-6 border border-teal-500/20">
-      <div class="text-5xl font-black text-teal-300 text-glow-teal mb-1">{gameState.score}</div>
-      <div class="text-teal-400/60 text-sm font-semibold uppercase tracking-wider">очков</div>
+      <div class="text-5xl font-black theme-accent-strong text-glow-teal mb-1">{gameState.score}</div>
+      <div class="theme-accent-muted text-sm font-semibold uppercase tracking-wider">очков</div>
       <div class="mt-4 text-xs theme-soft">
         {#if gameState.mode === 'FIXED_10'}
           {gameState.questionNumber} вопросов • Режим: 10 вопросов

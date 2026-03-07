@@ -45,6 +45,8 @@
   --theme-selection-text: #ffffff;
   --theme-shadow-soft: 0 10px 30px rgba(2, 8, 23, 0.35);
   --theme-page-gradient: radial-gradient(circle at top left, rgba(20, 184, 166, 0.08), transparent 35%), radial-gradient(circle at bottom right, rgba(16, 185, 129, 0.08), transparent 35%);
+  --theme-accent-strong: #5eead4;
+  --theme-accent-muted: rgba(94, 234, 212, 0.8);
 }
 
 :root[data-theme='light'] {
@@ -70,6 +72,8 @@
   --theme-selection-text: #102534;
   --theme-shadow-soft: 0 12px 32px rgba(15, 23, 42, 0.08);
   --theme-page-gradient: radial-gradient(circle at top left, rgba(20, 184, 166, 0.1), transparent 35%), radial-gradient(circle at bottom right, rgba(245, 158, 11, 0.08), transparent 35%);
+  --theme-accent-strong: #0f766e;
+  --theme-accent-muted: rgba(15, 118, 110, 0.72);
 }
 
 /* ===== Base styles ===== */
@@ -104,6 +108,14 @@ body {
 
 .theme-soft {
   color: var(--theme-text-soft);
+}
+
+.theme-accent-strong {
+  color: var(--theme-accent-strong);
+}
+
+.theme-accent-muted {
+  color: var(--theme-accent-muted);
 }
 
 .theme-panel {
