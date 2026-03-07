@@ -170,7 +170,7 @@
     </div>
   </div>
 {:else if gameState.currentQuestion}
-  <div class="container mx-auto px-4 py-4 max-w-6xl pb-28">
+  <div class="container mx-auto px-4 py-4 max-w-6xl">
     <!-- Header -->
     <div class="flex items-center justify-between mb-4">
       <div class="flex items-center gap-4">
@@ -254,6 +254,14 @@
           distanceKm={gameState.lastAnswer.distanceKm}
         />
       </div>
+      <div class="animate-slide-up" style="animation-delay: 0.05s">
+        <button
+          onclick={nextQuestion}
+          class="w-full py-4 btn-primary text-lg tracking-wide glow-teal"
+        >
+          {isLastQuestion ? 'Результаты' : 'Следующий вопрос →'}
+        </button>
+      </div>
     {:else}
       <button
         onclick={submitAnswer}
@@ -265,18 +273,6 @@
     {/if}
   </div>
 
-  {#if showResult && gameState.lastAnswer}
-    <div class="fixed bottom-0 left-0 right-0 z-[1200] p-4 theme-bottom-fade">
-      <div class="container mx-auto max-w-6xl px-4">
-        <button
-          onclick={nextQuestion}
-          class="w-full py-4 btn-primary text-lg tracking-wide glow-teal"
-        >
-          {isLastQuestion ? 'Результаты' : 'Следующий вопрос →'}
-        </button>
-      </div>
-    </div>
-  {/if}
 {/if}
 
 <!-- Exit Modal -->
