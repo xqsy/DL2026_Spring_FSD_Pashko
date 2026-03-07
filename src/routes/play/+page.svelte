@@ -170,9 +170,9 @@
     </div>
   </div>
 {:else if gameState.currentQuestion}
-  <div class="container mx-auto px-4 py-4 max-w-6xl">
+  <div class="container mx-auto px-4 py-3 max-w-6xl h-[100dvh] flex flex-col overflow-hidden">
     <!-- Header -->
-    <div class="flex items-center justify-between mb-4">
+    <div class="flex items-center justify-between mb-3 shrink-0">
       <div class="flex items-center gap-4">
         <button
           onclick={handleExit}
@@ -197,35 +197,37 @@
 
     <!-- Progress -->
     {#if gameState.mode === 'FIXED_10'}
-      <div class="mb-4">
+      <div class="mb-3 shrink-0">
         <ProgressBar current={gameState.questionNumber} total={gameState.totalQuestions} />
       </div>
     {/if}
 
     <!-- Question -->
-    <QuestionCard
-      text={gameState.currentQuestion.text}
-      category={gameState.currentQuestion.category}
-      questionNumber={gameState.mode === 'FIXED_10' ? gameState.questionNumber : undefined}
-      totalQuestions={gameState.mode === 'FIXED_10' ? gameState.totalQuestions : undefined}
-    />
+    <div class="shrink-0 [&_.glass]:mb-3">
+      <QuestionCard
+        text={gameState.currentQuestion.text}
+        category={gameState.currentQuestion.category}
+        questionNumber={gameState.mode === 'FIXED_10' ? gameState.questionNumber : undefined}
+        totalQuestions={gameState.mode === 'FIXED_10' ? gameState.totalQuestions : undefined}
+      />
+    </div>
 
     <!-- Hint Button -->
     {#if !showResult && gameState.currentQuestion.hint && !gameState.usedHint}
       <button
         onclick={useHint}
-        class="mb-4 px-4 py-2 bg-amber-500/10 text-amber-300 rounded-lg hover:bg-amber-500/20 transition-colors border border-amber-500/20 text-sm font-semibold"
+        class="mb-3 shrink-0 px-4 py-2 bg-amber-500/10 text-amber-300 rounded-lg hover:bg-amber-500/20 transition-colors border border-amber-500/20 text-sm font-semibold"
       >
         💡 Подсказка (-100 очков)
       </button>
     {:else if gameState.usedHint && gameState.currentQuestion.hint}
-      <div class="mb-4 px-4 py-3 glass-teal rounded-lg text-teal-300 text-sm">
+      <div class="mb-3 shrink-0 px-4 py-3 glass-teal rounded-lg text-teal-300 text-sm">
         💡 {gameState.currentQuestion.hint}
       </div>
     {/if}
 
     <!-- Map -->
-    <div class="relative h-[50vh] mb-4 rounded-xl overflow-hidden border theme-border glow-teal">
+    <div class="relative flex-1 min-h-[220px] rounded-xl overflow-hidden border theme-border glow-teal">
       <GameMap
         onMapClick={handleMapClick}
         clickedMarker={clickedPosition}
@@ -248,13 +250,11 @@
 
     <!-- Result -->
     {#if showResult && gameState.lastAnswer}
-      <div class="mb-4 animate-slide-up">
+      <div class="mt-3 shrink-0 space-y-3 animate-slide-up">
         <ScoreDisplay
           points={gameState.lastAnswer.points}
           distanceKm={gameState.lastAnswer.distanceKm}
         />
-      </div>
-      <div class="animate-slide-up" style="animation-delay: 0.05s">
         <button
           onclick={nextQuestion}
           class="w-full py-4 btn-primary text-lg tracking-wide glow-teal"
@@ -266,7 +266,7 @@
       <button
         onclick={submitAnswer}
         disabled={!clickedPosition || isSubmitting}
-        class="w-full py-4 btn-success text-lg tracking-wide"
+        class="w-full py-4 mt-3 shrink-0 btn-success text-lg tracking-wide"
       >
         {isSubmitting ? 'Проверка...' : 'Ответить'}
       </button>
