@@ -67,24 +67,24 @@
         <h2 class="text-xs font-semibold theme-muted mb-4 uppercase tracking-widest">Режим</h2>
         <div class="grid grid-cols-2 gap-4">
           <button
-            class="p-5 border transition-all duration-200 text-left relative {selectedMode === 'FIXED_10' ? 'border-theme-text-strong bg-theme-text-strong text-theme-bg' : 'border-theme-border theme-text hover:border-theme-text-muted'}"
+            class="p-5 border transition-all duration-200 text-left relative {selectedMode === 'FIXED_10' ? 'border-emerald-500 bg-emerald-500/10 text-theme-text' : 'border-theme-border theme-text hover:border-theme-text-muted'}"
             onclick={() => selectedMode = 'FIXED_10'}
           >
             <div class="font-medium text-sm mb-1">10 Вопросов</div>
             <div class="text-xs opacity-70">Классический</div>
             {#if selectedMode === 'FIXED_10'}
-              <div class="absolute top-4 right-4 w-2 h-2 bg-teal-500 rounded-full"></div>
+              <div class="absolute top-4 right-4 w-2 h-2 bg-emerald-500"></div>
             {/if}
           </button>
           
           <button
-            class="p-5 border transition-all duration-200 text-left relative {selectedMode === 'ENDLESS' ? 'border-theme-text-strong bg-theme-text-strong text-theme-bg' : 'border-theme-border theme-text hover:border-theme-text-muted'}"
+            class="p-5 border transition-all duration-200 text-left relative {selectedMode === 'ENDLESS' ? 'border-emerald-500 bg-emerald-500/10 text-theme-text' : 'border-theme-border theme-text hover:border-theme-text-muted'}"
             onclick={() => selectedMode = 'ENDLESS'}
           >
             <div class="font-medium text-sm mb-1">Бесконечный</div>
             <div class="text-xs opacity-70">Без лимита</div>
             {#if selectedMode === 'ENDLESS'}
-              <div class="absolute top-4 right-4 w-2 h-2 bg-teal-500 rounded-full"></div>
+              <div class="absolute top-4 right-4 w-2 h-2 bg-emerald-500"></div>
             {/if}
           </button>
         </div>

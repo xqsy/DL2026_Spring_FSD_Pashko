@@ -175,7 +175,7 @@
       <div class="flex items-center gap-6">
         <button
           onclick={handleExit}
-          class="text-xs uppercase tracking-widest theme-muted hover:text-theme-text transition-colors"
+          class="btn-secondary text-xs py-2 px-4"
         >
           Выход
         </button>
@@ -287,13 +287,13 @@
         </button>
         <button
           onclick={() => confirmExit(false)}
-          class="w-full py-3 border border-theme-border hover:bg-theme-card-hover text-xs uppercase tracking-widest transition-colors"
+          class="w-full btn-secondary py-3 text-xs"
         >
           Выйти без сохранения
         </button>
         <button
           onclick={() => showExitModal = false}
-          class="w-full py-2 text-xs uppercase tracking-widest theme-muted hover:text-theme-text transition-colors mt-2"
+          class="w-full btn-secondary py-3 text-xs mt-2"
         >
           Отмена
         </button>

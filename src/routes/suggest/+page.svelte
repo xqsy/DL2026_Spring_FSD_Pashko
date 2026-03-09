@@ -67,7 +67,7 @@
     </h1>
     <button
       onclick={() => goto('/')}
-      class="text-xs uppercase tracking-widest theme-muted hover:text-theme-text transition-colors"
+      class="btn-secondary text-xs py-2 px-4"
     >
       На главную
     </button>
