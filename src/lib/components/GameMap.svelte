@@ -38,6 +38,51 @@
 
   let L: typeof import('leaflet');
 
+  function shiftCoordinatesLng(coordinates: GeoJSON.Position[] | GeoJSON.Position[][] | GeoJSON.Position[][][] | GeoJSON.Position[][][][], offset: number): typeof coordinates {
+    return coordinates.map((coordinate) => {
+      if (typeof coordinate[0] === 'number') {
+        const [lng, lat, ...rest] = coordinate as GeoJSON.Position;
+        return [lng + offset, lat, ...rest] as GeoJSON.Position;
+      }
+
+      return shiftCoordinatesLng(
+        coordinate as GeoJSON.Position[][] | GeoJSON.Position[][][] | GeoJSON.Position[][][][],
+        offset
+      );
+    }) as typeof coordinates;
+  }
+
+  function shiftGeometryLng(geometry: GeoJSON.Geometry, offset: number): GeoJSON.Geometry {
+    if (geometry.type === 'GeometryCollection') {
+      return {
+        ...geometry,
+        geometries: geometry.geometries.map((item) => shiftGeometryLng(item, offset))
+      };
+    }
+
+    return {
+      ...geometry,
+      coordinates: shiftCoordinatesLng(geometry.coordinates as never, offset)
+    } as GeoJSON.Geometry;
+  }
+
+  function createWrappedBorderFeatureCollection(feature: GeoJSON.Feature): GeoJSON.FeatureCollection {
+    if (!feature.geometry) {
+      return {
+        type: 'FeatureCollection',
+        features: []
+      };
+    }
+
+    return {
+      type: 'FeatureCollection',
+      features: [-360, 0, 360].map((offset) => ({
+        ...feature,
+        geometry: shiftGeometryLng(feature.geometry, offset)
+      }))
+    };
+  }
+
   function normalizeLngAroundReference(targetLng: number, referenceLng: number) {
     let normalizedLng = targetLng;
 
@@ -178,7 +223,7 @@
       borderLayer = null;
     }
     if (dis && cb) {
-      borderLayer = L.geoJSON(cb, {
+      borderLayer = L.geoJSON(createWrappedBorderFeatureCollection(cb), {
         style: {
           color: '#f59e0b',
           weight: 2,
