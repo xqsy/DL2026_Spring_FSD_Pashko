@@ -29,7 +29,7 @@
 		<button
 			type="button"
 			onclick={() => theme.toggleTheme()}
-			class="theme-toggle flex items-center justify-center w-10 h-10 border border-theme-border rounded-none transition-all duration-200 hover:bg-theme-card"
+			class="theme-toggle flex items-center justify-center w-10 h-10 border border-theme-border  transition-all duration-200 hover:bg-theme-card"
 			aria-label={currentTheme === 'dark' ? 'Включить светлую тему' : 'Включить тёмную тему'}
 		>
 			<span class="text-sm">{currentTheme === 'dark' ? 'О' : 'I'}</span>

@@ -286,7 +286,7 @@
               <button
                 onclick={() => act('REJECT')}
                 disabled={isActing || selected.status !== 'PENDING'}
-                class="flex-1 py-3 rounded-none font-bold text-white bg-gradient-to-r from-red-600 to-red-500 border border-red-500/30 hover:shadow-[0_0_24px_rgba(239,68,68,0.3)] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                class="flex-1 py-3 rounded-none font-bold text-white bg-red-500 border border-red-500/30 hover:shadow-[0_0_24px_rgba(239,68,68,0.3)] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Reject
               </button>
