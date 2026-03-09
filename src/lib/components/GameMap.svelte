@@ -256,7 +256,7 @@
 </script>
 
 <div class="relative w-full h-full">
-  <div bind:this={mapContainer} class="w-full h-full rounded-xl overflow-hidden shadow-lg"></div>
+  <div bind:this={mapContainer} class="w-full h-full bg-theme-map-bg"></div>
 </div>
 
 <style>
