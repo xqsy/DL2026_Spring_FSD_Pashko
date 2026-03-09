@@ -288,7 +288,7 @@
     </div>
   </div>
 
-  <div class="glass rounded-2xl p-4 mb-6">
+  <div class="glass rounded-none p-4 mb-6">
     <div class="grid grid-cols-1 md:grid-cols-12 gap-3 items-end">
       <div class="md:col-span-6">
         <label for="questions-search" class="block text-sm font-semibold theme-muted mb-1 uppercase tracking-wider">Поиск</label>
@@ -329,18 +329,18 @@
   </div>
 
   {#if errorMessage}
-    <div class="mb-4 p-3 bg-red-500/10 text-red-400 rounded-xl border border-red-500/20 text-sm">{errorMessage}</div>
+    <div class="mb-4 p-3 bg-red-500/10 text-red-400 rounded-none border border-red-500/20 text-sm">{errorMessage}</div>
   {/if}
 
   {#if successMessage}
-    <div class="mb-4 p-3 glass-teal text-teal-300 rounded-xl text-sm">{successMessage}</div>
+    <div class="mb-4 p-3 glass-teal text-teal-300 rounded-none text-sm">{successMessage}</div>
   {/if}
 
   {#if isLoading}
     <div class="text-center py-12 theme-soft">Загрузка...</div>
   {:else}
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      <div class="glass rounded-2xl overflow-hidden">
+      <div class="glass rounded-none overflow-hidden">
         <div class="px-4 py-3 border-b theme-border text-sm theme-soft flex items-center justify-between">
           <div>Всего: {questions.length}</div>
           <span class="badge-teal text-xs">{mode === 'CREATE' ? 'Создание' : 'Редактирование'}</span>
@@ -363,7 +363,7 @@
       </div>
 
       <div class="lg:col-span-2">
-        <div class="glass rounded-2xl p-6">
+        <div class="glass rounded-none p-6">
           <div class="flex items-start justify-between gap-4">
             <div>
               <div class="text-lg font-bold theme-heading">
@@ -377,7 +377,7 @@
               <button
                 onclick={remove}
                 disabled={isDeleting}
-                class="px-4 py-2 bg-red-500/10 text-red-400 rounded-lg hover:bg-red-500/20 transition-colors disabled:opacity-50 border border-red-500/20 text-sm font-semibold"
+                class="px-4 py-2 bg-red-500/10 text-red-400 rounded-none hover:bg-red-500/20 transition-colors disabled:opacity-50 border border-red-500/20 text-sm font-semibold"
               >
                 {isDeleting ? 'Удаление...' : 'Удалить'}
               </button>
@@ -432,7 +432,7 @@
             </div>
           </div>
 
-          <div class="mt-4 h-[360px] rounded-xl overflow-hidden">
+          <div class="mt-4 h-[360px] rounded-none overflow-hidden">
             <GameMap
               onMapClick={(lat, lng) => {
                 draftLat = lat;

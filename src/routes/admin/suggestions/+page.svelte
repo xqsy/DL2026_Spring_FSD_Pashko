@@ -163,37 +163,37 @@
   <div class="mb-6 flex gap-2">
     <button
       onclick={() => (selectedStatus = 'PENDING')}
-      class="px-4 py-2 rounded-lg text-sm font-semibold transition-all {selectedStatus === 'PENDING' ? 'bg-teal-500/15 text-teal-300 border border-teal-500/30' : 'theme-inline-surface theme-muted hover:border-teal-500/20'}"
+      class="px-4 py-2 rounded-none text-sm font-semibold transition-all {selectedStatus === 'PENDING' ? 'bg-teal-500/15 text-teal-300 border border-teal-500/30' : 'theme-inline-surface theme-muted hover:border-teal-500/20'}"
     >
       Pending
     </button>
     <button
       onclick={() => (selectedStatus = 'APPROVED')}
-      class="px-4 py-2 rounded-lg text-sm font-semibold transition-all {selectedStatus === 'APPROVED' ? 'bg-teal-500/15 text-teal-300 border border-teal-500/30' : 'theme-inline-surface theme-muted hover:border-teal-500/20'}"
+      class="px-4 py-2 rounded-none text-sm font-semibold transition-all {selectedStatus === 'APPROVED' ? 'bg-teal-500/15 text-teal-300 border border-teal-500/30' : 'theme-inline-surface theme-muted hover:border-teal-500/20'}"
     >
       Approved
     </button>
     <button
       onclick={() => (selectedStatus = 'REJECTED')}
-      class="px-4 py-2 rounded-lg text-sm font-semibold transition-all {selectedStatus === 'REJECTED' ? 'bg-teal-500/15 text-teal-300 border border-teal-500/30' : 'theme-inline-surface theme-muted hover:border-teal-500/20'}"
+      class="px-4 py-2 rounded-none text-sm font-semibold transition-all {selectedStatus === 'REJECTED' ? 'bg-teal-500/15 text-teal-300 border border-teal-500/30' : 'theme-inline-surface theme-muted hover:border-teal-500/20'}"
     >
       Rejected
     </button>
   </div>
 
   {#if errorMessage}
-    <div class="mb-4 p-3 bg-red-500/10 text-red-400 rounded-xl border border-red-500/20 text-sm">{errorMessage}</div>
+    <div class="mb-4 p-3 bg-red-500/10 text-red-400 rounded-none border border-red-500/20 text-sm">{errorMessage}</div>
   {/if}
 
   {#if successMessage}
-    <div class="mb-4 p-3 glass-teal text-teal-300 rounded-xl text-sm">{successMessage}</div>
+    <div class="mb-4 p-3 glass-teal text-teal-300 rounded-none text-sm">{successMessage}</div>
   {/if}
 
   {#if isLoading}
     <div class="text-center py-12 theme-soft">Загрузка...</div>
   {:else}
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      <div class="glass rounded-2xl overflow-hidden">
+      <div class="glass rounded-none overflow-hidden">
         <div class="px-4 py-3 border-b theme-border text-sm theme-soft">
           Всего: {suggestions.length}
         </div>
@@ -214,11 +214,11 @@
 
       <div class="lg:col-span-2">
         {#if !selected}
-          <div class="glass rounded-2xl p-6 theme-soft">
+          <div class="glass rounded-none p-6 theme-soft">
             Выберите предложение слева
           </div>
         {:else}
-          <div class="glass rounded-2xl p-6">
+          <div class="glass rounded-none p-6">
             <div class="flex items-start justify-between gap-4">
               <div>
                 <div class="text-lg font-bold theme-heading">{selected.questionText}</div>
@@ -238,7 +238,7 @@
               <span class="badge-teal">{selected.status}</span>
             </div>
 
-            <div class="mt-4 h-[360px] rounded-xl overflow-hidden">
+            <div class="mt-4 h-[360px] rounded-none overflow-hidden">
               <GameMap
                 onMapClick={undefined}
                 clickedMarker={null}
@@ -286,7 +286,7 @@
               <button
                 onclick={() => act('REJECT')}
                 disabled={isActing || selected.status !== 'PENDING'}
-                class="flex-1 py-3 rounded-xl font-bold text-white bg-gradient-to-r from-red-600 to-red-500 border border-red-500/30 hover:shadow-[0_0_24px_rgba(239,68,68,0.3)] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                class="flex-1 py-3 rounded-none font-bold text-white bg-gradient-to-r from-red-600 to-red-500 border border-red-500/30 hover:shadow-[0_0_24px_rgba(239,68,68,0.3)] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Reject
               </button>
