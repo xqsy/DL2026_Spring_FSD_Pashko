@@ -120,13 +120,11 @@
     </div>
 
     <!-- Navigation -->
-    <nav class="mt-12 flex justify-center gap-8">
-      <a href="/leaderboard" class="text-xs font-medium theme-muted hover:text-theme-text transition-colors uppercase tracking-widest flex items-center gap-2">
-        <span class="w-1 h-1 bg-amber-500 rounded-full"></span>
+    <nav class="mt-12 flex justify-center gap-4">
+      <a href="/leaderboard" class="btn-secondary text-xs flex items-center justify-center min-w-[140px]">
         Рейтинг
       </a>
-      <a href="/suggest" class="text-xs font-medium theme-muted hover:text-theme-text transition-colors uppercase tracking-widest flex items-center gap-2">
-        <span class="w-1 h-1 bg-emerald-500 rounded-full"></span>
+      <a href="/suggest" class="btn-secondary text-xs flex items-center justify-center min-w-[140px]">
         Предложить
       </a>
     </nav>
