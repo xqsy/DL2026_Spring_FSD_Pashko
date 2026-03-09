@@ -24,36 +24,27 @@
   };
 </script>
 
-<div class="glass rounded-xl overflow-hidden">
-  <div class="px-6 py-4 border-b theme-border flex items-center gap-3">
-    <svg class="w-5 h-5 text-amber-400" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-    <h3 class="text-lg font-bold theme-heading">{title}</h3>
+<div class="border border-theme-border bg-theme-card">
+  <div class="px-8 py-6 border-b border-theme-border">
+    <h3 class="text-sm font-medium theme-heading tracking-widest uppercase">{title}</h3>
   </div>
   
   {#if entries.length === 0}
-    <div class="p-8 text-center theme-soft">
-      Пока нет результатов
+    <div class="p-12 text-center theme-muted text-sm tracking-widest uppercase">
+      Нет результатов
     </div>
   {:else}
-    <div class="divide-y theme-border">
+    <div class="divide-y divide-theme-border">
       {#each entries as entry, i (entry.id)}
-        <div class="flex items-center px-6 py-4 hover:bg-white/5 transition-colors {i < 3 ? 'theme-surface-subtle' : ''}">
-          <div class="w-8 text-center font-bold">
-            {#if i === 0}
-              <span class="text-xl">🥇</span>
-            {:else if i === 1}
-              <span class="text-xl">🥈</span>
-            {:else if i === 2}
-              <span class="text-xl">🥉</span>
-            {:else}
-              <span class="theme-soft">{i + 1}</span>
-            {/if}
+        <div class="flex items-center px-8 py-5 hover:bg-theme-card-hover transition-colors {i < 3 ? 'bg-theme-card-hover/50' : ''}">
+          <div class="w-12 text-sm tracking-widest text-theme-muted">
+            {(i + 1).toString().padStart(2, '0')}
           </div>
           <div class="flex-1 ml-4">
-            <div class="font-semibold {i === 0 ? 'text-amber-300' : 'theme-heading'}">{entry.playerName}</div>
-            <div class="text-xs theme-soft">{formatDate(entry.createdAt)}</div>
+            <div class="font-medium text-sm {i === 0 ? 'text-amber-500' : 'theme-heading'}">{entry.playerName}</div>
+            <div class="text-xs theme-muted mt-1 uppercase tracking-widest">{formatDate(entry.createdAt)}</div>
           </div>
-          <div class="text-lg font-bold {i === 0 ? 'text-amber-300 text-glow-amber' : i < 3 ? 'text-teal-300' : 'text-teal-400/70'}">
+          <div class="text-lg font-light {i === 0 ? 'text-amber-500' : i < 3 ? 'text-teal-500' : 'theme-text'}">
             {entry.score}
           </div>
         </div>

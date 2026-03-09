@@ -25,24 +25,18 @@
 </svelte:head>
 
 <div class="theme-shell min-h-screen geo-grid relative overflow-hidden transition-colors duration-300">
-	<!-- Ambient glow orbs -->
-	<div class="fixed top-[-20%] left-[-10%] w-[600px] h-[600px] bg-teal-500/5 rounded-full blur-3xl pointer-events-none"></div>
-	<div class="fixed bottom-[-20%] right-[-10%] w-[500px] h-[500px] bg-emerald-500/5 rounded-full blur-3xl pointer-events-none"></div>
-	<div class="fixed top-[40%] right-[20%] w-[300px] h-[300px] bg-amber-500/3 rounded-full blur-3xl pointer-events-none"></div>
-
-	<div class="fixed top-4 right-4 z-30">
+	<div class="fixed top-6 right-6 z-30">
 		<button
 			type="button"
 			onclick={() => theme.toggleTheme()}
-			class="theme-toggle flex items-center gap-3 rounded-full px-4 py-2.5 text-sm font-semibold shadow-lg transition-all duration-300 hover:-translate-y-0.5"
+			class="theme-toggle flex items-center justify-center w-10 h-10 border border-theme-border rounded-none transition-all duration-200 hover:bg-theme-card"
 			aria-label={currentTheme === 'dark' ? 'Включить светлую тему' : 'Включить тёмную тему'}
 		>
-			<span class="text-lg leading-none">{currentTheme === 'dark' ? '☀️' : '🌙'}</span>
-			<span>{currentTheme === 'dark' ? 'Светлая тема' : 'Тёмная тема'}</span>
+			<span class="text-sm">{currentTheme === 'dark' ? 'О' : 'I'}</span>
 		</button>
 	</div>
 
-	<div class="relative z-10">
+	<div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 		{@render children()}
 	</div>
 </div>

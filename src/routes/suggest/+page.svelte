@@ -59,29 +59,31 @@
   <title>Предложить вопрос - GeoHoot</title>
 </svelte:head>
 
-<div class="container mx-auto px-4 py-8 max-w-4xl">
-  <div class="flex items-center justify-between mb-8">
-    <h1 class="text-3xl font-black theme-heading flex items-center gap-3">
-      <svg class="w-6 h-6 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
-      Предложить вопрос
+<div class="container mx-auto px-4 py-12 max-w-6xl">
+  <!-- Header -->
+  <header class="flex items-center justify-between mb-12 border-b border-theme-border pb-6">
+    <h1 class="text-2xl font-semibold tracking-tight theme-heading uppercase">
+      Предложить
     </h1>
     <button
       onclick={() => goto('/')}
-      class="btn-secondary text-sm py-2 px-4"
+      class="text-xs uppercase tracking-widest theme-muted hover:text-theme-text transition-colors"
     >
-      ← На главную
+      На главную
     </button>
-  </div>
+  </header>
 
   {#if submittedId}
-    <div class="glass rounded-2xl p-8 glow-emerald animate-slide-up">
-      <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-emerald-500/15 border border-emerald-500/20 flex items-center justify-center">
-        <svg class="w-8 h-8 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+    <div class="theme-panel p-12 max-w-2xl mx-auto text-center border-x-0 sm:border-x">
+      <div class="text-sm tracking-widest uppercase text-teal-500 mb-6">Успешно</div>
+      <h2 class="text-2xl font-light theme-heading mb-4">Вопрос отправлен</h2>
+      <p class="theme-muted text-sm mb-8">Спасибо за помощь в развитии игры. Ваш вопрос будет проверен модераторами.</p>
+      
+      <div class="text-xs theme-soft font-mono mb-12 p-4 border border-theme-border bg-theme-bg">
+        ID: {submittedId}
       </div>
-      <div class="text-lg font-bold theme-heading text-center">Спасибо!</div>
-      <div class="theme-muted mt-2 text-center text-sm">Предложение отправлено на модерацию.</div>
-      <div class="text-xs theme-soft mt-2 text-center font-mono">ID: {submittedId}</div>
-      <div class="mt-6 flex gap-3 justify-center">
+      
+      <div class="flex gap-4 justify-center">
         <button
           onclick={() => {
             submittedId = null;
@@ -90,89 +92,103 @@
             city = '';
             picked = null;
           }}
-          class="btn-secondary text-sm"
+          class="px-6 py-3 border border-theme-border hover:bg-theme-card-hover transition-colors text-xs uppercase tracking-widest"
         >
-          Отправить ещё
+          Отправить еще
         </button>
         <button
           onclick={() => goto('/')}
-          class="btn-primary text-sm"
+          class="px-6 py-3 btn-primary text-xs"
         >
           В меню
         </button>
       </div>
     </div>
   {:else}
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      <div class="glass rounded-2xl p-6">
-        <label for="suggest-question-text" class="block text-sm font-semibold theme-muted mb-2 uppercase tracking-wider">Текст вопроса</label>
-        <textarea
-          id="suggest-question-text"
-          bind:value={questionText}
-          rows={4}
-          class="w-full input-dark resize-none"
-          placeholder="Например: Где находится Рига?"
-        ></textarea>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-          <div>
-            <label for="suggest-country" class="block text-sm font-semibold theme-muted mb-2 uppercase tracking-wider">Страна <span class="theme-soft normal-case">(опц.)</span></label>
-            <input
-              id="suggest-country"
-              bind:value={country}
-              class="w-full input-dark"
-              placeholder="Латвия"
-            />
+    <div class="flex flex-col lg:flex-row gap-8">
+      <!-- Form Column -->
+      <div class="lg:w-1/3 flex flex-col gap-6">
+        <div class="theme-panel p-8 border-x-0 sm:border-x h-full flex flex-col">
+          <div class="mb-6">
+            <label for="suggest-question-text" class="block text-xs font-medium theme-muted mb-3 uppercase tracking-widest">
+              Текст вопроса
+            </label>
+            <textarea
+              id="suggest-question-text"
+              bind:value={questionText}
+              rows={4}
+              class="w-full input-dark resize-none bg-theme-bg"
+              placeholder="Например: Где находится Рига?"
+            ></textarea>
           </div>
-          <div>
-            <label for="suggest-city" class="block text-sm font-semibold theme-muted mb-2 uppercase tracking-wider">Город <span class="theme-soft normal-case">(опц.)</span></label>
-            <input
-              id="suggest-city"
-              bind:value={city}
-              class="w-full input-dark"
-              placeholder="Рига"
-            />
+
+          <div class="space-y-6 flex-1">
+            <div>
+              <label for="suggest-country" class="block text-xs font-medium theme-muted mb-3 uppercase tracking-widest">
+                Страна <span class="theme-soft normal-case">(опц.)</span>
+              </label>
+              <input
+                id="suggest-country"
+                bind:value={country}
+                class="w-full input-dark bg-theme-bg"
+                placeholder="Например: Латвия"
+              />
+            </div>
+            <div>
+              <label for="suggest-city" class="block text-xs font-medium theme-muted mb-3 uppercase tracking-widest">
+                Город <span class="theme-soft normal-case">(опц.)</span>
+              </label>
+              <input
+                id="suggest-city"
+                bind:value={city}
+                class="w-full input-dark bg-theme-bg"
+                placeholder="Например: Рига"
+              />
+            </div>
+          </div>
+
+          <div class="mt-8 pt-6 border-t border-theme-border">
+            <div class="text-xs uppercase tracking-widest mb-6">
+              {#if picked}
+                <span class="text-teal-500 flex items-center gap-2">
+                  <div class="w-1.5 h-1.5 bg-teal-500 rounded-full"></div>
+                  {picked.lat.toFixed(4)}, {picked.lng.toFixed(4)}
+                </span>
+              {:else}
+                <span class="theme-muted">Метка не установлена</span>
+              {/if}
+            </div>
+
+            {#if errorMessage}
+              <div class="mb-6 p-4 border border-red-500 text-red-500 text-xs uppercase tracking-widest">
+                {errorMessage}
+              </div>
+            {/if}
+
+            <button
+              onclick={submit}
+              disabled={isSubmitting}
+              class="w-full py-4 btn-primary text-xs"
+            >
+              {isSubmitting ? 'Отправка...' : 'Отправить'}
+            </button>
           </div>
         </div>
-
-        <div class="mt-4 text-sm">
-          {#if picked}
-            <span class="text-teal-300 flex items-center gap-2">
-              <div class="w-2 h-2 bg-teal-400 rounded-full animate-pulse"></div>
-              {picked.lat.toFixed(5)}, {picked.lng.toFixed(5)}
-            </span>
-          {:else}
-            <span class="theme-soft">Выберите точку на карте →</span>
-          {/if}
-        </div>
-
-        {#if errorMessage}
-          <div class="mt-4 p-3 bg-red-500/10 text-red-400 rounded-xl border border-red-500/20 text-sm">{errorMessage}</div>
-        {/if}
-
-        <button
-          onclick={submit}
-          disabled={isSubmitting}
-          class="mt-6 w-full py-3 btn-primary"
-        >
-          {isSubmitting ? 'Отправка...' : 'Отправить на модерацию'}
-        </button>
       </div>
 
-      <div class="glass rounded-2xl p-4">
-        <div class="h-[420px] rounded-xl overflow-hidden border theme-border">
-          <GameMap
-            onMapClick={onMapClick}
-            clickedMarker={picked}
-            correctMarker={null}
-            showLine={false}
-            disabled={false}
-            countryBorder={null}
-            hideLabels={false}
-          />
-        </div>
-        <div class="text-xs theme-soft mt-3">
-          Кликни по карте, чтобы поставить точку.
+      <!-- Map Column -->
+      <div class="lg:w-2/3 h-[500px] lg:h-auto min-h-[500px] border border-theme-border relative">
+        <GameMap
+          onMapClick={onMapClick}
+          clickedMarker={picked}
+          correctMarker={null}
+          showLine={false}
+          disabled={false}
+          countryBorder={null}
+          hideLabels={false}
+        />
+        <div class="absolute bottom-4 right-4 bg-theme-bg px-4 py-2 border border-theme-border text-xs uppercase tracking-widest theme-muted pointer-events-none">
+          Кликните для установки метки
         </div>
       </div>
     </div>

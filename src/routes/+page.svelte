@@ -48,115 +48,87 @@
   <title>GeoHoot - Географическая викторина</title>
 </svelte:head>
 
-<div class="min-h-screen flex flex-col items-center justify-center px-4 py-12">
-  <!-- Hero -->
-  <div class="text-center mb-10 animate-slide-up">
-    <!-- Animated Globe -->
-    <div class="relative inline-block mb-6">
-      <div class="w-24 h-24 mx-auto animate-float">
-        <svg viewBox="0 0 128 128" class="w-full h-full drop-shadow-[0_0_30px_rgba(20,184,166,0.4)]">
-          <defs>
-            <linearGradient id="hero-globe" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" style="stop-color:#0f766e"/>
-              <stop offset="100%" style="stop-color:#14b8a6"/>
-            </linearGradient>
-            <linearGradient id="hero-land" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" style="stop-color:#34d399"/>
-              <stop offset="100%" style="stop-color:#10b981"/>
-            </linearGradient>
-          </defs>
-          <circle cx="64" cy="64" r="58" fill="url(#hero-globe)"/>
-          <ellipse cx="64" cy="64" rx="28" ry="56" fill="none" stroke="#5eead4" stroke-width="1.5" opacity="0.4"/>
-          <ellipse cx="64" cy="64" rx="48" ry="56" fill="none" stroke="#5eead4" stroke-width="1" opacity="0.25"/>
-          <line x1="8" y1="64" x2="120" y2="64" stroke="#5eead4" stroke-width="1" opacity="0.3"/>
-          <path d="M30 35 Q38 28 50 32 Q55 38 48 45 Q40 48 32 42 Z" fill="url(#hero-land)" opacity="0.9"/>
-          <path d="M60 25 Q72 20 82 28 Q88 38 80 48 Q70 52 62 45 Q56 35 60 25Z" fill="url(#hero-land)" opacity="0.9"/>
-          <path d="M75 55 Q85 50 95 58 Q98 68 90 75 Q80 78 74 68Z" fill="url(#hero-land)" opacity="0.8"/>
-          <path d="M35 60 Q45 55 55 62 Q58 72 50 78 Q40 80 34 70Z" fill="url(#hero-land)" opacity="0.85"/>
-          <path d="M55 82 Q65 78 72 85 Q74 92 68 96 Q58 98 54 90Z" fill="url(#hero-land)" opacity="0.8"/>
-          <circle cx="64" cy="64" r="58" fill="none" stroke="#14b8a6" stroke-width="2.5" opacity="0.5"/>
-        </svg>
-      </div>
-      <!-- Orbiting dot -->
-      <div class="absolute inset-0 animate-spin-slow">
-        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-2 h-2 bg-amber-400 rounded-full shadow-[0_0_8px_rgba(251,191,36,0.8)]"></div>
-      </div>
-    </div>
+<div class="min-h-screen flex flex-col items-center justify-center py-16">
+  <div class="w-full max-w-2xl">
+    <!-- Header -->
+    <header class="mb-16 text-center">
+      <h1 class="text-4xl md:text-5xl font-semibold tracking-tight mb-4 theme-heading">
+        GEO<span class="text-teal-500 font-light">HOOT</span>
+      </h1>
+      <p class="text-sm theme-muted uppercase tracking-widest">
+        Географическая викторина
+      </p>
+    </header>
 
-    <h1 class="text-5xl sm:text-6xl font-black tracking-tight mb-3 theme-heading">
-      <span class="text-teal-400 text-glow-teal">Geo</span><span>Hoot</span>
-    </h1>
-    <p class="text-lg theme-muted max-w-md mx-auto leading-relaxed">
-      Проверь свои знания географии! Найди города, достопримечательности и страны на карте мира.
-    </p>
-  </div>
-
-  <!-- Game Setup Card -->
-  <div class="glass rounded-2xl p-8 w-full max-w-md glow-teal animate-slide-up" style="animation-delay: 0.15s">
-    <h2 class="text-xl font-bold text-teal-300 mb-6 text-center tracking-wide uppercase">Начать игру</h2>
-    
-    <!-- Mode Selection -->
-    <div class="mb-6">
-      <div class="block text-sm font-semibold theme-muted mb-3 uppercase tracking-wider">Режим игры</div>
-      <div class="grid grid-cols-2 gap-3">
-        <button
-          class="p-4 rounded-xl border transition-all duration-300 text-left {selectedMode === 'FIXED_10' ? 'border-teal-500/50 bg-teal-500/10 glow-teal' : 'theme-inline-surface hover:border-teal-500/20'}"
-          onclick={() => selectedMode = 'FIXED_10'}
-        >
-          <div class="text-2xl mb-1">🎯</div>
-          <div class="font-bold text-sm {selectedMode === 'FIXED_10' ? 'text-teal-300' : 'theme-text'}">10 вопросов</div>
-          <div class="text-xs mt-0.5 {selectedMode === 'FIXED_10' ? 'text-teal-400/70' : 'theme-soft'}">Классический</div>
-        </button>
-        <button
-          class="p-4 rounded-xl border transition-all duration-300 text-left {selectedMode === 'ENDLESS' ? 'border-teal-500/50 bg-teal-500/10 glow-teal' : 'theme-inline-surface hover:border-teal-500/20'}"
-          onclick={() => selectedMode = 'ENDLESS'}
-        >
-          <div class="text-2xl mb-1">♾️</div>
-          <div class="font-bold text-sm {selectedMode === 'ENDLESS' ? 'text-teal-300' : 'theme-text'}">Бесконечный</div>
-          <div class="text-xs mt-0.5 {selectedMode === 'ENDLESS' ? 'text-teal-400/70' : 'theme-soft'}">Без лимита</div>
-        </button>
+    <!-- Game Setup Card -->
+    <div class="theme-panel p-8 md:p-12 border-x-0 sm:border-x">
+      <!-- Mode Selection -->
+      <div class="mb-10">
+        <h2 class="text-xs font-semibold theme-muted mb-4 uppercase tracking-widest">Режим</h2>
+        <div class="grid grid-cols-2 gap-4">
+          <button
+            class="p-5 border transition-all duration-200 text-left relative {selectedMode === 'FIXED_10' ? 'border-theme-text-strong bg-theme-text-strong text-theme-bg' : 'border-theme-border theme-text hover:border-theme-text-muted'}"
+            onclick={() => selectedMode = 'FIXED_10'}
+          >
+            <div class="font-medium text-sm mb-1">10 Вопросов</div>
+            <div class="text-xs opacity-70">Классический</div>
+            {#if selectedMode === 'FIXED_10'}
+              <div class="absolute top-4 right-4 w-2 h-2 bg-teal-500 rounded-full"></div>
+            {/if}
+          </button>
+          
+          <button
+            class="p-5 border transition-all duration-200 text-left relative {selectedMode === 'ENDLESS' ? 'border-theme-text-strong bg-theme-text-strong text-theme-bg' : 'border-theme-border theme-text hover:border-theme-text-muted'}"
+            onclick={() => selectedMode = 'ENDLESS'}
+          >
+            <div class="font-medium text-sm mb-1">Бесконечный</div>
+            <div class="text-xs opacity-70">Без лимита</div>
+            {#if selectedMode === 'ENDLESS'}
+              <div class="absolute top-4 right-4 w-2 h-2 bg-teal-500 rounded-full"></div>
+            {/if}
+          </button>
+        </div>
       </div>
-    </div>
 
-    <!-- Category Selection -->
-    <div class="mb-8">
-      <label for="game-category" class="block text-sm font-semibold theme-muted mb-3 uppercase tracking-wider">Категория</label>
-      <select
-        id="game-category"
-        bind:value={selectedCategory}
-        class="w-full input-dark"
+      <!-- Category Selection -->
+      <div class="mb-12">
+        <label for="game-category" class="block text-xs font-semibold theme-muted mb-4 uppercase tracking-widest">Категория</label>
+        <div class="relative">
+          <select
+            id="game-category"
+            bind:value={selectedCategory}
+            class="w-full input-dark appearance-none bg-transparent"
+          >
+            {#each categories as cat}
+              <option value={cat.value} class="bg-theme-bg">{cat.label}</option>
+            {/each}
+          </select>
+          <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-theme-muted">
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Start Button -->
+      <button
+        onclick={startGame}
+        disabled={isStarting}
+        class="w-full btn-primary py-5 text-sm tracking-widest"
       >
-        {#each categories as cat}
-          <option value={cat.value}>{cat.label}</option>
-        {/each}
-      </select>
+        {isStarting ? 'Загрузка...' : 'Начать'}
+      </button>
     </div>
 
-    <!-- Start Button -->
-    <button
-      onclick={startGame}
-      disabled={isStarting}
-      class="w-full py-4 btn-primary text-lg tracking-wide"
-    >
-      {isStarting ? 'Загрузка...' : 'Играть'}
-    </button>
-  </div>
-
-  <!-- Quick Links -->
-  <div class="mt-8 flex gap-4 animate-slide-up" style="animation-delay: 0.3s">
-    <a
-      href="/leaderboard"
-      class="btn-secondary flex items-center gap-2 text-sm"
-    >
-      <svg class="w-4 h-4 text-amber-400" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-      Таблица лидеров
-    </a>
-    <a
-      href="/suggest"
-      class="btn-secondary flex items-center gap-2 text-sm"
-    >
-      <svg class="w-4 h-4 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
-      Предложить вопрос
-    </a>
+    <!-- Navigation -->
+    <nav class="mt-12 flex justify-center gap-8">
+      <a href="/leaderboard" class="text-xs font-medium theme-muted hover:text-theme-text transition-colors uppercase tracking-widest flex items-center gap-2">
+        <span class="w-1 h-1 bg-amber-500 rounded-full"></span>
+        Рейтинг
+      </a>
+      <a href="/suggest" class="text-xs font-medium theme-muted hover:text-theme-text transition-colors uppercase tracking-widest flex items-center gap-2">
+        <span class="w-1 h-1 bg-emerald-500 rounded-full"></span>
+        Предложить
+      </a>
+    </nav>
   </div>
 </div>

@@ -16,22 +16,22 @@
   };
 </script>
 
-<div class="glass rounded-xl p-6 mb-4">
-  <div class="flex items-center justify-between mb-4">
+<div class="border border-theme-border p-8 bg-theme-card">
+  <div class="flex items-center justify-between mb-6 pb-4 border-b border-theme-border">
     {#if totalQuestions && questionNumber}
-      <span class="text-sm font-semibold text-teal-400">
-        Вопрос {questionNumber} из {totalQuestions}
+      <span class="text-xs tracking-widest uppercase font-medium theme-muted">
+        {questionNumber} / {totalQuestions}
       </span>
     {:else}
       <span></span>
     {/if}
     {#if category}
-      <span class="badge-teal">
+      <span class="text-xs tracking-widest uppercase font-medium text-teal-500">
         {categoryLabels[category] || category}
       </span>
     {/if}
   </div>
-  <h2 class="text-2xl font-bold theme-heading leading-snug">
+  <h2 class="text-xl md:text-2xl font-medium theme-heading leading-relaxed">
     {text}
   </h2>
 </div>

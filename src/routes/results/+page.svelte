@@ -50,11 +50,11 @@
   }
 
   const getScoreMessage = (score: number) => {
-    if (score >= 9000) return 'Невероятно! Вы географический гений! 🏆';
-    if (score >= 7000) return 'Отличный результат! Вы отлично знаете географию! 🌟';
-    if (score >= 5000) return 'Хороший результат! Есть куда расти! 👍';
-    if (score >= 3000) return 'Неплохо! Продолжайте изучать мир! 📚';
-    return 'Не сдавайтесь! Практика делает совершенным! 💪';
+    if (score >= 9000) return 'Идеальный результат';
+    if (score >= 7000) return 'Отличный результат';
+    if (score >= 5000) return 'Хороший результат';
+    if (score >= 3000) return 'Неплохо';
+    return 'Попробуйте еще раз';
   };
 </script>
 
@@ -62,93 +62,94 @@
   <title>Результаты - GeoHoot</title>
 </svelte:head>
 
-<div class="min-h-screen flex flex-col items-center justify-center px-4 py-12">
-  <div class="glass rounded-2xl p-8 w-full max-w-md text-center glow-teal animate-slide-up">
-    <!-- Score -->
-    <div class="mb-6">
-      <div class="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-teal-500/20 to-emerald-500/20 border border-teal-500/30 flex items-center justify-center">
-        <span class="text-4xl">🎉</span>
-      </div>
-      <h1 class="text-3xl font-black theme-heading mb-2">Игра окончена!</h1>
-      <p class="theme-muted text-sm">{getScoreMessage(gameState.score)}</p>
-    </div>
+<div class="min-h-screen flex flex-col items-center justify-center py-16 px-4">
+  <div class="theme-panel p-8 md:p-16 w-full max-w-xl border-x-0 sm:border-x">
+    <!-- Header -->
+    <header class="text-center mb-12">
+      <h1 class="text-sm tracking-widest uppercase theme-muted mb-4">Игра окончена</h1>
+      <p class="text-xl md:text-2xl font-light theme-heading">{getScoreMessage(gameState.score)}</p>
+    </header>
 
     <!-- Stats -->
-    <div class="bg-gradient-to-br from-teal-500/15 to-emerald-500/10 rounded-xl p-6 mb-6 border border-teal-500/20">
-      <div class="text-5xl font-black theme-accent-strong text-glow-teal mb-1">{gameState.score}</div>
-      <div class="theme-accent-muted text-sm font-semibold uppercase tracking-wider">очков</div>
-      <div class="mt-4 text-xs theme-soft">
+    <div class="border-y border-theme-border py-12 mb-12 text-center">
+      <div class="text-6xl md:text-7xl font-light text-teal-500 mb-4">{gameState.score}</div>
+      <div class="text-xs tracking-widest uppercase theme-muted">Итоговый счет</div>
+      <div class="mt-6 text-xs uppercase tracking-widest theme-soft flex justify-center gap-4">
+        <span>Режим: {gameState.mode === 'FIXED_10' ? '10 Вопросов' : 'Бесконечный'}</span>
         {#if gameState.mode === 'FIXED_10'}
-          {gameState.questionNumber} вопросов • Режим: 10 вопросов
-        {:else}
-          Режим: Бесконечный
+          <span>•</span>
+          <span>Вопросов: {gameState.questionNumber}</span>
         {/if}
       </div>
     </div>
 
-    <!-- Submit to leaderboard -->
-    {#if !submitted}
-      <div class="mb-6 text-left">
-        <label for="playerName" class="block text-sm font-semibold theme-muted mb-2 uppercase tracking-wider">
-          Ваше имя для таблицы лидеров
-        </label>
-        <input
-          id="playerName"
-          type="text"
-          bind:value={playerName}
-          placeholder="Введите имя..."
-          maxlength="30"
-          class="w-full input-dark"
-        />
-      </div>
+    <!-- Actions -->
+    <div class="max-w-sm mx-auto">
+      {#if !submitted}
+        <div class="mb-8">
+          <label for="playerName" class="block text-xs font-medium theme-muted mb-3 uppercase tracking-widest text-center">
+            Имя для рейтинга
+          </label>
+          <input
+            id="playerName"
+            type="text"
+            bind:value={playerName}
+            placeholder="Введите имя"
+            maxlength="30"
+            class="w-full input-dark text-center"
+          />
+        </div>
 
-      <div class="flex flex-col gap-3">
-        <button
-          onclick={submitScore}
-          disabled={!playerName.trim() || isSubmitting}
-          class="w-full py-3 btn-primary"
-        >
-          {isSubmitting ? 'Сохранение...' : 'Сохранить результат'}
-        </button>
-        <button
-          onclick={exitToMenu}
-          class="w-full py-3 btn-secondary"
-        >
-          Выйти в меню
-        </button>
-        <button
-          onclick={playAgain}
-          class="w-full py-3 btn-secondary"
-        >
-          Играть снова
-        </button>
-      </div>
-    {:else}
-      <div class="mb-6 p-4 glass-teal rounded-xl text-teal-300 flex items-center justify-center gap-2 text-sm font-semibold">
-        <div class="w-2 h-2 bg-emerald-400 rounded-full"></div>
-        Результат сохранён!
-      </div>
-      <div class="flex flex-col gap-3">
-        <button
-          onclick={viewLeaderboard}
-          class="w-full py-3 btn-amber flex items-center justify-center gap-2"
-        >
-          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          Таблица лидеров
-        </button>
-        <button
-          onclick={exitToMenu}
-          class="w-full py-3 btn-secondary"
-        >
-          Выйти в меню
-        </button>
-        <button
-          onclick={playAgain}
-          class="w-full py-3 btn-primary"
-        >
-          Играть снова
-        </button>
-      </div>
-    {/if}
+        <div class="flex flex-col gap-4">
+          <button
+            onclick={submitScore}
+            disabled={!playerName.trim() || isSubmitting}
+            class="w-full py-4 btn-primary text-xs"
+          >
+            {isSubmitting ? 'Сохранение...' : 'Сохранить'}
+          </button>
+          <div class="flex gap-4">
+            <button
+              onclick={playAgain}
+              class="flex-1 py-4 border border-theme-border hover:bg-theme-card-hover transition-colors text-xs uppercase tracking-widest"
+            >
+              Еще раз
+            </button>
+            <button
+              onclick={exitToMenu}
+              class="flex-1 py-4 border border-theme-border hover:bg-theme-card-hover transition-colors text-xs uppercase tracking-widest"
+            >
+              В меню
+            </button>
+          </div>
+        </div>
+      {:else}
+        <div class="mb-8 p-4 border border-teal-500 text-teal-500 text-center text-xs uppercase tracking-widest">
+          Результат сохранён
+        </div>
+        <div class="flex flex-col gap-4">
+          <button
+            onclick={viewLeaderboard}
+            class="w-full py-4 btn-primary text-xs"
+          >
+            Рейтинг
+          </button>
+          <div class="flex gap-4">
+            <button
+              onclick={playAgain}
+              class="flex-1 py-4 border border-theme-border hover:bg-theme-card-hover transition-colors text-xs uppercase tracking-widest"
+            >
+              Еще раз
+            </button>
+            <button
+              onclick={exitToMenu}
+              class="flex-1 py-4 border border-theme-border hover:bg-theme-card-hover transition-colors text-xs uppercase tracking-widest"
+            >
+              В меню
+            </button>
+          </div>
+        </div>
+      {/if}
+    </div>
   </div>
 </div>

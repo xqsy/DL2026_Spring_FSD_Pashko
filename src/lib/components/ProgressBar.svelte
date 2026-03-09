@@ -10,16 +10,10 @@
 </script>
 
 {#if total > 0}
-  <div class="w-full theme-surface-subtle rounded-full h-2.5 overflow-hidden border theme-border">
+  <div class="w-full bg-theme-card-hover h-1 overflow-hidden relative">
     <div
-      class="h-full bg-gradient-to-r from-teal-500 to-emerald-400 transition-all duration-500 ease-out relative"
+      class="h-full bg-theme-text-strong transition-all duration-500 ease-out absolute left-0 top-0"
       style="width: {percentage}%"
-    >
-      <div class="absolute inset-0 animate-shimmer"></div>
-    </div>
-  </div>
-  <div class="flex justify-between text-xs theme-soft mt-1.5 font-medium">
-    <span>{current} / {total}</span>
-    <span class="text-teal-400/70">{percentage}%</span>
+    ></div>
   </div>
 {/if}

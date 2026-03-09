@@ -70,46 +70,51 @@
   <title>Таблица лидеров - GeoHoot</title>
 </svelte:head>
 
-<div class="container mx-auto px-4 py-8 max-w-4xl">
+<div class="container mx-auto px-4 py-12 max-w-4xl">
   <!-- Header -->
-  <div class="flex items-center justify-between mb-8">
-    <h1 class="text-3xl font-black theme-heading flex items-center gap-3">
-      <svg class="w-7 h-7 text-amber-400" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-      Таблица лидеров
+  <header class="flex items-center justify-between mb-16 border-b border-theme-border pb-6">
+    <h1 class="text-2xl font-semibold tracking-tight theme-heading uppercase">
+      Рейтинг
     </h1>
     <button
       onclick={() => goto('/')}
-      class="btn-secondary text-sm py-2 px-4"
+      class="text-xs uppercase tracking-widest theme-muted hover:text-theme-text transition-colors"
     >
-      ← На главную
+      На главную
     </button>
-  </div>
+  </header>
 
   <!-- Mode Filter -->
-  <div class="mb-6">
-    <div class="flex gap-2">
+  <div class="mb-12">
+    <div class="flex gap-4 border-b border-theme-border">
       <button
         onclick={() => selectedMode = 'FIXED_10'}
-        class="px-4 py-2 rounded-lg text-sm font-semibold transition-all {selectedMode === 'FIXED_10' ? 'bg-teal-500/15 text-teal-300 border border-teal-500/30' : 'theme-inline-surface theme-muted hover:border-teal-500/20'}"
+        class="pb-4 px-2 text-xs uppercase tracking-widest font-medium transition-colors relative {selectedMode === 'FIXED_10' ? 'text-theme-text' : 'theme-muted hover:text-theme-text'}"
       >
         10 вопросов
+        {#if selectedMode === 'FIXED_10'}
+          <div class="absolute bottom-0 left-0 right-0 h-0.5 bg-teal-500"></div>
+        {/if}
       </button>
       <button
         onclick={() => selectedMode = 'ENDLESS'}
-        class="px-4 py-2 rounded-lg text-sm font-semibold transition-all {selectedMode === 'ENDLESS' ? 'bg-teal-500/15 text-teal-300 border border-teal-500/30' : 'theme-inline-surface theme-muted hover:border-teal-500/20'}"
+        class="pb-4 px-2 text-xs uppercase tracking-widest font-medium transition-colors relative {selectedMode === 'ENDLESS' ? 'text-theme-text' : 'theme-muted hover:text-theme-text'}"
       >
         Бесконечный
+        {#if selectedMode === 'ENDLESS'}
+          <div class="absolute bottom-0 left-0 right-0 h-0.5 bg-teal-500"></div>
+        {/if}
       </button>
     </div>
   </div>
 
   {#if selectedMode === 'FIXED_10'}
-    <div class="mb-6">
-      <div class="flex flex-wrap gap-2">
+    <div class="mb-12">
+      <div class="flex flex-wrap gap-4">
         {#each categories as category (category.value)}
           <button
             onclick={() => selectedCategory = category.value}
-            class="px-4 py-2 rounded-lg text-sm font-semibold transition-all {selectedCategory === category.value ? 'bg-teal-500/15 text-teal-300 border border-teal-500/30' : 'theme-inline-surface theme-muted hover:border-teal-500/20'}"
+            class="px-4 py-2 border transition-all text-xs uppercase tracking-widest {selectedCategory === category.value ? 'border-theme-text-strong bg-theme-text-strong text-theme-bg' : 'border-theme-border theme-muted hover:border-theme-text-muted hover:text-theme-text'}"
           >
             {category.label}
           </button>
@@ -120,12 +125,11 @@
 
   <!-- Leaderboard -->
   {#if isLoading}
-    <div class="text-center py-12">
-      <div class="w-10 h-10 mx-auto mb-3 border-3 border-teal-500/30 border-t-teal-400 rounded-full animate-spin"></div>
-      <div class="theme-soft">Загрузка...</div>
+    <div class="text-center py-24">
+      <div class="text-sm tracking-widest uppercase theme-muted animate-pulse">Загрузка...</div>
     </div>
   {:else if errorMessage}
-    <div class="text-center py-12 theme-soft">
+    <div class="text-center py-24 theme-soft text-sm tracking-widest uppercase">
       {errorMessage}
     </div>
   {:else}
