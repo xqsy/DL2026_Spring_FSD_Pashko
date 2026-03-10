@@ -372,6 +372,16 @@ body {
   outline: none;
   border-color: var(--theme-text-strong);
 }
+select.input-dark option {
+  background: var(--theme-bg);
+  color: var(--theme-text);
+}
+
+select.input-dark option:checked {
+  background: color-mix(in srgb, var(--theme-accent-strong) 28%, var(--theme-bg));
+  color: var(--theme-text-strong);
+}
+
 .input-dark::placeholder {
   color: color-mix(in srgb, var(--theme-text-muted) 70%, transparent);
 }
