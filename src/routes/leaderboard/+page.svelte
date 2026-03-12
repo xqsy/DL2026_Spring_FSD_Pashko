@@ -4,6 +4,7 @@
 
   type GameMode = 'FIXED_10' | 'ENDLESS';
   type QuestionCategory = 'CAPITAL' | 'LANDMARK' | 'CITY' | 'COUNTRY';
+  type Fixed10CategoryFilter = QuestionCategory | 'ALL';
 
   interface Entry {
     id: string;
@@ -24,7 +25,8 @@
   let entries = $state<Entry[]>([]);
   let isLoading = $state(true);
   let selectedMode = $state<GameMode>('FIXED_10');
-  let selectedCategory = $state<QuestionCategory>('CAPITAL');
+  let selectedFixed10Category = $state<Fixed10CategoryFilter>('CAPITAL');
+  let selectedEndlessCategory = $state<QuestionCategory>('CAPITAL');
   let errorMessage = $state<string | null>(null);
 
   async function loadLeaderboard() {
@@ -37,7 +39,11 @@
     });
 
     if (selectedMode === 'FIXED_10') {
-      params.set('category', selectedCategory);
+      params.set('category', selectedFixed10Category);
+    }
+
+    if (selectedMode === 'ENDLESS') {
+      params.set('category', selectedEndlessCategory);
     }
 
     const url = `/api/leaderboard?${params.toString()}`;
@@ -61,8 +67,10 @@
 
   const leaderboardTitle = $derived(
     selectedMode === 'ENDLESS'
-      ? 'Бесконечный режим'
-      : `10 вопросов · ${categories.find((category) => category.value === selectedCategory)?.label ?? ''}`
+      ? `Бесконечный режим · ${categories.find((category) => category.value === selectedEndlessCategory)?.label ?? ''}`
+      : selectedFixed10Category === 'ALL'
+        ? '10 вопросов · Все категории'
+        : `10 вопросов · ${categories.find((category) => category.value === selectedFixed10Category)?.label ?? ''}`
   );
 </script>
 
@@ -111,10 +119,29 @@
   {#if selectedMode === 'FIXED_10'}
     <div class="mb-12">
       <div class="flex flex-wrap gap-4">
+        <button
+          onclick={() => selectedFixed10Category = 'ALL'}
+          class="px-4 py-2 border transition-all text-xs uppercase tracking-widest {selectedFixed10Category === 'ALL' ? 'border-theme-text-strong bg-theme-text-strong text-theme-bg' : 'border-theme-border theme-muted hover:border-theme-text-muted hover:text-theme-text'}"
+        >
+          Все категории
+        </button>
         {#each categories as category (category.value)}
           <button
-            onclick={() => selectedCategory = category.value}
-            class="px-4 py-2 border transition-all text-xs uppercase tracking-widest {selectedCategory === category.value ? 'border-theme-text-strong bg-theme-text-strong text-theme-bg' : 'border-theme-border theme-muted hover:border-theme-text-muted hover:text-theme-text'}"
+            onclick={() => selectedFixed10Category = category.value}
+            class="px-4 py-2 border transition-all text-xs uppercase tracking-widest {selectedFixed10Category === category.value ? 'border-theme-text-strong bg-theme-text-strong text-theme-bg' : 'border-theme-border theme-muted hover:border-theme-text-muted hover:text-theme-text'}"
+          >
+            {category.label}
+          </button>
+        {/each}
+      </div>
+    </div>
+  {:else}
+    <div class="mb-12">
+      <div class="flex flex-wrap gap-4">
+        {#each categories as category (category.value)}
+          <button
+            onclick={() => selectedEndlessCategory = category.value}
+            class="px-4 py-2 border transition-all text-xs uppercase tracking-widest {selectedEndlessCategory === category.value ? 'border-theme-text-strong bg-theme-text-strong text-theme-bg' : 'border-theme-border theme-muted hover:border-theme-text-muted hover:text-theme-text'}"
           >
             {category.label}
           </button>

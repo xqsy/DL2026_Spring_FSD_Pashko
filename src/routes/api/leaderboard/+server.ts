@@ -63,7 +63,7 @@ export async function POST({ request }: RequestEvent) {
       playerName: playerName.trim(),
       score,
       mode: mode as GameMode,
-      category: mode === 'FIXED_10' ? normalizedCategory : null,
+      category: mode === 'FIXED_10' ? normalizedCategory : normalizedCategory,
       sessionId: typeof sessionId === 'string' && sessionId ? sessionId : null,
     },
   });
