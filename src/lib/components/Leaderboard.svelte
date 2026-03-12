@@ -20,6 +20,7 @@
     return date.toLocaleDateString('ru-RU', {
       day: 'numeric',
       month: 'short',
+      year: 'numeric',
     });
   };
 </script>

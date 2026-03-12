@@ -13,6 +13,10 @@ export async function GET({ url }: RequestEvent) {
     where.mode = mode as GameMode;
   }
 
+  if (category === 'ALL') {
+    where.category = null;
+  }
+
   if (category === 'CAPITAL' || category === 'LANDMARK' || category === 'CITY' || category === 'COUNTRY') {
     where.category = category as QuestionCategory;
   }
@@ -63,7 +67,7 @@ export async function POST({ request }: RequestEvent) {
       playerName: playerName.trim(),
       score,
       mode: mode as GameMode,
-      category: mode === 'FIXED_10' ? normalizedCategory : normalizedCategory,
+      category: normalizedCategory,
       sessionId: typeof sessionId === 'string' && sessionId ? sessionId : null,
     },
   });

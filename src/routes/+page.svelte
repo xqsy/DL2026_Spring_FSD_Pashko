@@ -14,16 +14,6 @@
     { value: 'COUNTRY', label: 'Страны' },
   ];
 
-  const categoryOptions = $derived(
-    selectedMode === 'ENDLESS' ? categories.filter((c) => c.value !== '') : categories
-  );
-
-  $effect(() => {
-    if (selectedMode === 'ENDLESS' && !selectedCategory) {
-      selectedCategory = 'CAPITAL';
-    }
-  });
-
   async function startGame() {
     isStarting = true;
     game.reset();
@@ -109,7 +99,7 @@
             bind:value={selectedCategory}
             class="w-full input-dark appearance-none bg-transparent"
           >
-            {#each categoryOptions as cat}
+            {#each categories as cat}
               <option value={cat.value} class="bg-theme-bg">{cat.label}</option>
             {/each}
           </select>
