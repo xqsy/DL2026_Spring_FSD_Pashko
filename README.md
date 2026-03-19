@@ -27,8 +27,18 @@
 # Клонировать репозиторий
 git clone <repo-url>
 
+# Перейти в папку проекта
+cd DL2026_Spring_FSD_Pashko
+
 # Установить зависимости
 npm install
+
+# Настроить переменные окружения (SQLite)
+# PowerShell (Windows)
+Copy-Item .env.example .env
+
+# Bash (macOS/Linux/Git Bash)
+cp .env.example .env
 
 # Сгенерировать Prisma клиент
 npx prisma generate
