@@ -17,8 +17,8 @@
 |-----------|------------|
 | Framework | SvelteKit 2.x |
 | Map | Leaflet |
-| Database | SQLite + Prisma 7 |
-| Styling | TailwindCSS |
+| Database | SQLite + Prisma 7 (`@prisma/adapter-libsql`) |
+| Styling | TailwindCSS 4 |
 | Build | Vite |
 
 ## 📦 Установка
@@ -33,6 +33,9 @@ npm install
 
 # Сгенерировать Prisma клиент
 npx prisma generate
+
+# Применить миграции (создаст файл БД sqlite при первом запуске)
+npx prisma migrate dev
 
 # Заполнить базу вопросов
 npx tsx prisma/seed.ts
@@ -52,7 +55,12 @@ npm run build
 npm run preview
 ```
 
-## 📁 Структура проекта
+## � Документация
+
+- **Проектирование и анализ**: `docs/design.md`
+- **Рефлексия по использованию AI**: `docs/AI_REFLECTION.md`
+
+## �📁 Структура проекта
 
 ```
 geohoot/
@@ -84,6 +92,8 @@ geohoot/
 | POST | `/api/answers` | Отправить ответ |
 | GET | `/api/leaderboard` | Таблица лидеров |
 | POST | `/api/leaderboard` | Сохранить результат |
+
+Подробное описание всех endpoint’ов (включая admin/suggestions/countries) — в `docs/design.md`.
 
 ## 📊 Алгоритм очков
 
