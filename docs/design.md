@@ -6,6 +6,85 @@ GeoHoot — интерактивное веб-приложение для про
 
 ---
 
+## Часть 1. Проектирование и анализ
+
+### 1.1 Пользовательские сценарии (user story)
+
+- **Игровая сессия**: Как игрок, я хочу получать вопрос и отмечать ответ кликом на карте, чтобы проверить знания географии и получить мгновенную оценку точности.
+- **Выбор режима и тематики**: Как игрок, я хочу выбрать режим (например, 10 вопросов или бесконечный) и категорию вопросов, чтобы подстроить игру под своё настроение и уровень.
+- **Сохранение результата**: Как игрок, я хочу сохранить итоговый результат в таблицу лидеров, чтобы сравнивать свои достижения с другими.
+
+### 1.2 Функциональные требования
+
+#### Обязательные
+
+- **Frontend**
+  - **Отображение карты**: интерактивная карта мира, возможность поставить маркер кликом.
+  - **Игровой цикл**: старт/выбор режима, показ вопроса, отправка ответа, экран результата, переход к следующему вопросу.
+  - **Отображение прогресса**: текущие очки, номер вопроса/прогресс для режима серии.
+  - **Таблица лидеров**: просмотр топа, форма ввода имени игрока после завершения.
+- **Backend**
+  - **Выдача вопросов**: получение случайного вопроса с фильтрацией по категории и исключением уже заданных.
+  - **Проверка ответа**: вычисление расстояния (Haversine) и начисление очков, возврат правильной точки.
+  - **Игровые сессии**: создание/получение/завершение сессии и накопление результата.
+  - **Лидеры**: сохранение и выдача топ-результатов по режиму/категории.
+
+#### Опциональные
+
+- **Frontend**
+  - **Подсказки**: кнопка подсказки с штрафом к очкам.
+  - **Таймер/анимации/темы**: таймер на вопрос, звуки, тёмная тема, PWA.
+- **Backend**
+  - **Анти-чит / rate limit**: ограничения частоты запросов для публичного API.
+  - **Расширенная статистика**: хранение метрик по ответам, подбор сложности.
+
+### 1.3 Проектирование API
+
+Ниже приведены предполагаемые endpoint’ы вашего бэкенда: метод, путь, ожидаемые параметры запроса и формат ответа. Если API использует авторизацию, укажите это.
+
+- **Вопросы**
+  - **GET** `/api/questions/random`
+    - **Query**: `category?`, `exclude?`
+    - **Response**: объект вопроса (id, text, category, ...).
+- **Ответ и оценка**
+  - **POST** `/api/answers`
+    - **Body**: `questionId`, `clickedLat`, `clickedLng`, `sessionId`
+    - **Response**: `distanceKm`, `points`, `correctLat`, `correctLng`, `maxPoints`.
+- **Сессии**
+  - **POST** `/api/sessions` (создать)
+  - **GET** `/api/sessions?id=[id]` (получить состояние)
+- **Таблица лидеров**
+  - **GET** `/api/leaderboard` (топ-10, фильтры по mode/category)
+  - **POST** `/api/leaderboard` (добавить результат)
+ - **Прочее (при необходимости)**
+  - **POST** `/api/suggestions` (предложить вопрос)
+  - **POST** `/api/admin/login` (вход администратора)
+
+**Авторизация**: на базовом уровне не требуется (публичная викторина). При необходимости можно добавить капчу/rate limit или пользовательские аккаунты как расширение.
+
+### 1.4 Модель данных
+
+Хранение предполагается в БД через Prisma (схема — в разделе **4. Модель данных**). Ключевые сущности:
+
+- **Question**
+  - **Поля**: `id: string`, `text: string`, `correctLat: number`, `correctLng: number`, `category: enum`, `difficulty: number`, `hint?: string`, `createdAt: datetime`.
+- **GameSession**
+  - **Поля**: `id: string`, `mode: enum`, `category?: enum`, `score: number`, `questionsTotal: number`, `questionsAnswered: number`, `isCompleted: boolean`, `createdAt: datetime`, `completedAt?: datetime`.
+- **Answer**
+  - **Поля**: `id: string`, `sessionId: string`, `questionId: string`, `clickedLat: number`, `clickedLng: number`, `distanceKm: number`, `points: number`, `usedHint: boolean`, `createdAt: datetime`.
+- **LeaderboardEntry**
+  - **Поля**: `id: string`, `playerName: string`, `score: number`, `mode: enum`, `category?: enum`, `sessionId?: string`, `createdAt: datetime`.
+
+### 1.5 Ключевые технические решения
+
+- **Frontend framework**: SvelteKit — быстрый DX, удобная маршрутизация, SSR при необходимости и простая интеграция API-роутов.
+- **Карта**: Leaflet (динамический импорт на клиенте) — зрелая библиотека, простая работа с маркерами/оверлеями; тайлы можно брать из OSM/CARTO.
+- **База и ORM**: Prisma 7 + SQLite с `@prisma/adapter-libsql` — быстрый старт и предсказуемое локальное хранилище; Prisma даёт типобезопасность и удобные миграции.
+- **Стили**: TailwindCSS — быстрый итеративный UI без разрастания CSS.
+- **Алгоритмы**: Haversine для расстояния и простая линейная формула очков (см. раздел **5. Алгоритм подсчёта очков**).
+
+---
+
 ## 2. Сценарии использования
 
 ### 2.1 Основной игровой сценарий
@@ -60,10 +139,8 @@ GeoHoot — интерактивное веб-приложение для про
 
 | Метод | Endpoint | Описание |
 |-------|----------|----------|
-| GET | `/api/questions` | Список всех вопросов (с пагинацией) |
 | GET | `/api/questions/random` | Получить случайный вопрос |
-| GET | `/api/questions/random?category=capital&exclude=1,2,3` | Случайный вопрос с фильтрами |
-| GET | `/api/questions/[id]` | Получить конкретный вопрос |
+| GET | `/api/questions/random?category=CAPITAL&exclude=1,2,3` | Случайный вопрос с фильтрами |
 
 ### 3.2 Ответы и оценка
 
@@ -97,15 +174,13 @@ GeoHoot — интерактивное веб-приложение для про
 | Метод | Endpoint | Описание |
 |-------|----------|----------|
 | POST | `/api/sessions` | Создать новую игровую сессию |
-| GET | `/api/sessions/[id]` | Получить состояние сессии |
-| PATCH | `/api/sessions/[id]` | Обновить результат сессии |
-| POST | `/api/sessions/[id]/complete` | Завершить сессию |
+| GET | `/api/sessions?id=[id]` | Получить состояние сессии |
 
 **Request body (создание):**
 ```json
 {
-  "mode": "fixed10",
-  "category": "capital"
+  "mode": "FIXED_10",
+  "category": "CAPITAL"
 }
 ```
 
@@ -114,8 +189,20 @@ GeoHoot — интерактивное веб-приложение для про
 | Метод | Endpoint | Описание |
 |-------|----------|----------|
 | GET | `/api/leaderboard` | Топ-10 результатов |
-| GET | `/api/leaderboard?mode=fixed10` | Топ по режиму |
+| GET | `/api/leaderboard?mode=FIXED_10` | Топ по режиму |
 | POST | `/api/leaderboard` | Добавить результат |
+
+### 3.5 Дополнительные endpoints (реализовано в репозитории)
+
+| Метод | Endpoint | Описание |
+|-------|----------|----------|
+| GET | `/api/countries` | Список стран |
+| GET | `/api/countries/border?code=XX` | GeoJSON границы страны |
+| POST | `/api/suggestions` | Предложить новый вопрос (модерация) |
+| POST | `/api/admin/login` | Вход администратора |
+| POST | `/api/admin/logout` | Выход администратора |
+| GET/POST | `/api/admin/questions` | Управление вопросами |
+| GET/PATCH | `/api/admin/suggestions` | Модерация предложений |
 
 ---
 
@@ -134,6 +221,12 @@ enum QuestionCategory {
   LANDMARK
   CITY
   COUNTRY
+}
+
+enum SuggestionStatus {
+  PENDING
+  APPROVED
+  REJECTED
 }
 
 model Question {
@@ -155,7 +248,7 @@ model GameSession {
   mode             GameMode
   category         QuestionCategory?
   score            Int         @default(0)
-  questionsTotal   Int         @default(0)
+  questionsTotal   Int         @default(10)
   questionsAnswered Int        @default(0)
   isCompleted      Boolean     @default(false)
   createdAt        DateTime    @default(now())
@@ -191,6 +284,26 @@ model LeaderboardEntry {
   createdAt   DateTime    @default(now())
   
   @@index([mode, score])
+}
+
+model QuestionSuggestion {
+  id            String           @id @default(cuid())
+  questionText  String
+  lat           Float
+  lng           Float
+  country       String?
+  city          String?
+  status        SuggestionStatus @default(PENDING)
+  adminNote     String?
+  createdAt     DateTime         @default(now())
+  reviewedAt    DateTime?
+  approvedAt    DateTime?
+  rejectedAt    DateTime?
+  approvedBy    String?
+  rejectedBy    String?
+  createdQuestionId String?
+
+  @@index([status, createdAt])
 }
 ```
 
@@ -250,13 +363,12 @@ function calculatePoints(distanceKm: number, usedHint: boolean): number {
 
 | Компонент | Технология | Версия |
 |-----------|------------|--------|
-| Framework | SvelteKit | 2.x |
+| Framework | SvelteKit | 2.50.x |
 | Map Library | Leaflet | 1.9.x |
-| Svelte-Leaflet | svelte-leaflet | 1.x |
-| Database | SQLite (dev) / PostgreSQL (prod) | - |
-| ORM | Prisma | 5.x |
-| Styling | TailwindCSS | 3.x |
-| Build Tool | Vite | 5.x |
+| Database | SQLite + libSQL adapter | - |
+| ORM | Prisma | 7.4.x |
+| Styling | TailwindCSS | 4.2.x |
+| Build Tool | Vite | 7.3.x |
 
 ---
 
@@ -274,10 +386,9 @@ geohoot/
 ├── src/
 │   ├── lib/
 │   │   ├── components/
-│   │   │   ├── Map.svelte
+│   │   │   ├── GameMap.svelte
 │   │   │   ├── QuestionCard.svelte
 │   │   │   ├── ScoreDisplay.svelte
-│   │   │   ├── Timer.svelte
 │   │   │   ├── ProgressBar.svelte
 │   │   │   └── Leaderboard.svelte
 │   │   ├── stores/
@@ -289,10 +400,13 @@ geohoot/
 │   │       └── db.ts
 │   ├── routes/
 │   │   ├── api/
-│   │   │   ├── questions/
+│   │   │   ├── admin/
 │   │   │   ├── answers/
+│   │   │   ├── countries/
+│   │   │   ├── leaderboard/
+│   │   │   ├── questions/
 │   │   │   ├── sessions/
-│   │   │   └── leaderboard/
+│   │   │   └── suggestions/
 │   │   ├── play/
 │   │   │   └── +page.svelte
 │   │   ├── leaderboard/
