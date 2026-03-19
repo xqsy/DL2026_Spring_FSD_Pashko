@@ -25,7 +25,7 @@
 
 ```bash
 # Клонировать репозиторий
-git clone <repo-url>
+git clone https://github.com/xqsy/DL2026_Spring_FSD_Pashko
 
 # Перейти в папку проекта
 cd DL2026_Spring_FSD_Pashko
