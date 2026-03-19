@@ -26,7 +26,6 @@
 ```bash
 # Клонировать репозиторий
 git clone <repo-url>
-cd geohoot
 
 # Установить зависимости
 npm install
