@@ -314,13 +314,13 @@
       <div class="md:col-span-3 flex gap-2">
         <button
           onclick={load}
-          class="flex-1 px-4 py-3 btn-secondary"
+          class="flex-1 min-w-0 !px-4 !py-3 btn-secondary"
         >
           Обновить
         </button>
         <button
           onclick={startCreate}
-          class="flex-1 px-4 py-3 btn-primary"
+          class="flex-1 min-w-0 !px-4 !py-3 btn-primary"
         >
           + Создать
         </button>
